@@ -1,23 +1,19 @@
 
 package com.tencent.wxcloudrun.web.controller.admin;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.request.AdsBaseParam;
-import com.tencent.wxcloudrun.common.request.AdsCreateParam;
-import com.tencent.wxcloudrun.common.request.AdsEditParam;
-import com.tencent.wxcloudrun.common.request.AdsPageParam;
+import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.common.response.Result;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
 import com.tencent.wxcloudrun.web.service.AdminAdsInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author tangsh
@@ -26,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "广告后台模块")
 @RestController
 @RequestMapping("/admin")
+@Slf4j
 public class AdminAdsInfoController {
 
     @Autowired
@@ -78,4 +75,25 @@ public class AdminAdsInfoController {
         return Result.Success();
     }
 
+
+    @ApiOperation("广告后台-文件路径获取")
+    @PostMapping("/v1/ads/get-upload-url")
+    @ApiRequest
+    public Result<JSONObject> getUploadUrl(@RequestBody @Validated UploadParam param) {
+        JSONObject reqJson = adsInfoService.upload(param);
+        return Result.Success(reqJson);
+    }
+
+    @ApiOperation("广告后台-文件上传")
+    @PostMapping("/v1/ads/upload")
+    @ApiRequest
+    public Result<Void> uploadCallback(@RequestHeader("x-wx-openid") String openid,
+                                       @RequestParam("file") String file,
+                                       @RequestParam("key") String key,
+                                       @RequestParam("Signature") String signature,
+                                       @RequestParam("x-cos-security-token") String xCosSecurityToken,
+                                       @RequestParam("x-cos-meta-fileid") String xCosMetaileid) {
+        log.info("openid:{},x-cos-meta-fileid:{}", openid, xCosMetaileid);
+        return Result.Success();
+    }
 }

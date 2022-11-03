@@ -24,7 +24,6 @@ import com.tencent.wxcloudrun.web.utils.NonceUtil;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -37,14 +36,8 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class AdsInfoServiceImpl implements AdsInfoService {
 
-    @Value("${wx.env.id:prod-9ge6u8sn7684a421}")
-    public String WX_ENV_ID;
-    @Value("${wx.mch.id:1633796573}")
-    public String WX_MERCHANT_ID;
-
     @Autowired
     private WxPayClient wxClient;
-
     @Autowired
     private AdsInfoRepository adsInfoRepository;
     @Autowired
@@ -78,15 +71,15 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     public JSONObject prePay(String openid, String ip, WxPrePayParam param) {
         JSONObject reqJson = (JSONObject) JSONObject.toJSON(param);
         reqJson.put("openid", openid);
-        reqJson.put("sub_mch_id", WX_MERCHANT_ID);
-        reqJson.put("env_id", WX_ENV_ID);
+        reqJson.put("sub_mch_id", AppConstant.WX_MERCHANT_ID);
+        reqJson.put("env_id", AppConstant.WX_ENV_ID);
         String outTradeNo = "PAY_" + NonceUtil.createNonce(12);
         reqJson.put("out_trade_no", outTradeNo);
         reqJson.put("spbill_create_ip", ip);
         reqJson.put("callback_type", 2);
         Container container = new Container();
-        container.setPath(AppConstant.WEB_HOOK_PAY_PAHT);
-        container.setService(AppConstant.APP_SERVER);
+        container.setPath(AppConstant.WEB_HOOK_PAY_PATH);
+        container.setService(AppConstant.WX_APP_SERVER);
         reqJson.put("container", container);
         WxEventEnum event = WxEventEnum.UNIFIED_ORDER;
         JSONObject respJson = wxClient.prePay(reqJson);
@@ -108,15 +101,15 @@ public class AdsInfoServiceImpl implements AdsInfoService {
         reqJson.put("out_trade_no", outTradeNo);
         String outRefundNo = "REFUND_" + NonceUtil.createNonce(12);
         reqJson.put("out_refund_no", outRefundNo);
-        reqJson.put("env_id", WX_ENV_ID);
-        reqJson.put("sub_mch_id", WX_MERCHANT_ID);
+        reqJson.put("env_id", AppConstant.WX_ENV_ID);
+        reqJson.put("sub_mch_id", AppConstant.WX_MERCHANT_ID);
         reqJson.put("total_fee", order.getAmount());
         reqJson.put("refund_fee", order.getAmount());
         reqJson.put("refund_desc", "微信退款");
         reqJson.put("callback_type", 2);
         Container container = new Container();
-        container.setPath(AppConstant.WEB_HOOK_REFUND_PAHT);
-        container.setService(AppConstant.APP_SERVER);
+        container.setPath(AppConstant.WEB_HOOK_REFUND_PATH);
+        container.setService(AppConstant.WX_APP_SERVER);
         reqJson.put("container", container);
         WxEventEnum event = WxEventEnum.REFUND_ORDER;
         JSONObject respJson = wxClient.refund(reqJson);
@@ -127,7 +120,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     @Override
     public JSONObject payQuery(String openid, WxPayQueryParam param) {
         JSONObject reqJson = (JSONObject) JSONObject.toJSON(param);
-        reqJson.put("sub_mch_id", WX_MERCHANT_ID);
+        reqJson.put("sub_mch_id", AppConstant.WX_MERCHANT_ID);
         WxEventEnum event = WxEventEnum.QUERY_ORDER;
         JSONObject respJson = wxClient.payQuery(reqJson);
         saveOrderLog(reqJson, respJson, event);
@@ -137,7 +130,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     @Override
     public JSONObject payClose(String openid, WxPayCloseParam param) {
         JSONObject reqJson = (JSONObject) JSONObject.toJSON(param);
-        reqJson.put("sub_mch_id", WX_MERCHANT_ID);
+        reqJson.put("sub_mch_id", AppConstant.WX_MERCHANT_ID);
         WxEventEnum event = WxEventEnum.CLOSE_ORDER;
         JSONObject respJson = wxClient.payClose(reqJson);
         saveOrderLog(reqJson, respJson, event);

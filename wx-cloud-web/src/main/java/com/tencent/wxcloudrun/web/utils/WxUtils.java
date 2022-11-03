@@ -45,4 +45,13 @@ public class WxUtils {
         }
         return wxResult;
     }
+
+    public static JSONObject getFileInfo(String response) {
+        JSONObject respJson = JSON.parseObject(response);
+        if (respJson == null || respJson.getInteger("errcode") != 0) {
+            log.warn("请求微信-接口异常");
+            return null;
+        }
+        return respJson;
+    }
 }

@@ -12,4 +12,6 @@ public interface WebhookService {
     JSONObject respWxPayHook(JSONObject req);
 
     JSONObject respWxRefundHook(JSONObject req);
+
+    JSONObject respWxUploadHook(JSONObject req);
 }

@@ -1,10 +1,8 @@
 package com.tencent.wxcloudrun.web.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.request.AdsBaseParam;
-import com.tencent.wxcloudrun.common.request.AdsCreateParam;
-import com.tencent.wxcloudrun.common.request.AdsEditParam;
-import com.tencent.wxcloudrun.common.request.AdsPageParam;
+import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
 
 /**
@@ -24,5 +22,7 @@ public interface AdminAdsInfoService {
     void on(AdsBaseParam param);
 
     void off(AdsBaseParam param);
+
+    JSONObject upload(UploadParam param);
 
 }

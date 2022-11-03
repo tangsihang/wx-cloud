@@ -1,24 +1,25 @@
 package com.tencent.wxcloudrun.web.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tencent.wxcloudrun.common.constants.AdsStatusEnum;
+import com.tencent.wxcloudrun.common.constants.AppConstant;
 import com.tencent.wxcloudrun.common.constants.CategoryEnum;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
-import com.tencent.wxcloudrun.common.request.AdsBaseParam;
-import com.tencent.wxcloudrun.common.request.AdsCreateParam;
-import com.tencent.wxcloudrun.common.request.AdsEditParam;
-import com.tencent.wxcloudrun.common.request.AdsPageParam;
+import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.common.utils.PageUtils;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
 import com.tencent.wxcloudrun.dao.repository.AdsInfoRepository;
+import com.tencent.wxcloudrun.web.client.WxFileClient;
 import com.tencent.wxcloudrun.web.service.AdminAdsInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,14 +31,18 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
 
+    @Value("${wx.env.id:prod-9ge6u8sn7684a421}")
+    public String WX_ENV_ID;
+
     @Autowired
     private AdsInfoRepository adsInfoRepository;
+    @Autowired
+    private WxFileClient wxFileClient;
 
     @Override
     public PageDTO<AdsInfoEntity> page(AdsPageParam param) {
         IPage<AdsInfoEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AdsInfoEntity::getStatus, "ON");
         if (StringUtils.hasLength(param.getCategory())) {
             CategoryEnum categoryEnum = CategoryEnum.getByCode(param.getCategory());
             queryWrapper.eq(AdsInfoEntity::getCategory, categoryEnum.getCode());
@@ -100,6 +105,14 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         update.setId(param.getId());
         update.setStatus(AdsStatusEnum.OFF.name());
         adsInfoRepository.updateById(update);
+    }
+
+    @Override
+    public JSONObject upload(UploadParam param) {
+        JSONObject reqJson = new JSONObject();
+        reqJson.put("env_id", WX_ENV_ID);
+        reqJson.put("path", param.getPath());
+        return wxFileClient.upload(reqJson);
     }
 
     private AdsInfoEntity checkAdsExist(Integer id) {

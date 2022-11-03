@@ -51,6 +51,13 @@ public class WebhookServiceImpl implements WebhookService {
         return respSuccess();
     }
 
+    @Override
+    public JSONObject respWxUploadHook(JSONObject req) {
+        log.info("微信上传-回调成功:{}", req.toJSONString());
+
+        return null;
+    }
+
     private void buildPayOrder(JSONObject req, String openid, String outTradeNo, Integer totalFee) {
         AdsOrderEntity order = new AdsOrderEntity();
         order.setOpenid(openid);
