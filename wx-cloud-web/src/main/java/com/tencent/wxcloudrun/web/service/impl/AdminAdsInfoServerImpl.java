@@ -108,9 +108,9 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     }
 
     @Override
-    public JSONObject upload(UploadParam param) {
+    public JSONObject upload(String openid UploadParam param) {
         JSONObject reqJson = new JSONObject();
-        reqJson.put("env_id", WX_ENV_ID);
+        reqJson.put("env", WX_ENV_ID);
         reqJson.put("path", param.getPath());
         return wxFileClient.upload(reqJson);
     }

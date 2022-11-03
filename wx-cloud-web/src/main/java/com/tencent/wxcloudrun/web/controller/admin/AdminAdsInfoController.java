@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * @author tangsh
  * @date 2022/10/27
@@ -77,10 +79,11 @@ public class AdminAdsInfoController {
 
 
     @ApiOperation("广告后台-文件路径获取")
-    @PostMapping("/v1/ads/get-upload-url")
+    @PostMapping("/v1/ads/pre-upload")
     @ApiRequest
-    public Result<JSONObject> getUploadUrl(@RequestBody @Validated UploadParam param) {
-        JSONObject reqJson = adsInfoService.upload(param);
+    public Result<JSONObject> getUploadUrl(@RequestHeader("x-wx-openid") String openid,
+                                           @RequestBody @Validated UploadParam param) {
+        JSONObject reqJson = adsInfoService.upload(openid, param);
         return Result.Success(reqJson);
     }
 
@@ -96,4 +99,17 @@ public class AdminAdsInfoController {
         log.info("openid:{},x-cos-meta-fileid:{}", openid, xCosMetaileid);
         return Result.Success();
     }
+
+
+    @ApiOperation("广告后台-test请求头")
+    @PostMapping("/v1/ads/test")
+    @ApiRequest
+    public Result<Void> test(@RequestHeader Map<String, String> headers) {
+        headers.forEach((key, value) -> {
+            // 日志中输出所有请求头
+            log.info(String.format("Header '%s' = %s", key, value));
+        });
+        return Result.Success();
+    }
+
 }

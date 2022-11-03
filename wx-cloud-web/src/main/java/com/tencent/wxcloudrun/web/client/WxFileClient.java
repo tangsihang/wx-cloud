@@ -25,6 +25,6 @@ public class WxFileClient {
                 .send(reqJson.toJSONString())
                 .body();
         log.info("请求:{},响应:{}", reqJson.toJSONString(), response);
-        return WxUtils.getData(response);
+        return WxUtils.getFileInfo(response);
     }
 }
