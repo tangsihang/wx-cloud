@@ -18,7 +18,7 @@ public class AdsEditParam {
 
     private Integer id;
     private String title;
-    private String dec;
+    private String des;
     private String img;
     private Integer fee;
     private String content;
