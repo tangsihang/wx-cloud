@@ -111,9 +111,6 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         return null;
     }
 
-
-
-
     private List<UserInfoResult> transferRecordForPage(IPage<UserEntity> record) {
         List<UserInfoResult> userInfoResultList = Lists.newArrayList();
         record.getRecords().forEach(it -> {
@@ -122,7 +119,6 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         });
         return userInfoResultList;
     }
-
 
     private UserInfoResult buildUserInfoResult(UserEntity userEntity) {
         String openid = userEntity.getOpenid();

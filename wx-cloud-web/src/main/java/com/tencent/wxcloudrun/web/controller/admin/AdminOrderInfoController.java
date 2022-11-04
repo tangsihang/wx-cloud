@@ -7,6 +7,7 @@ import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
+import com.tencent.wxcloudrun.common.response.AdminOrderResult;
 import com.tencent.wxcloudrun.common.response.Result;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
@@ -37,9 +38,8 @@ public class AdminOrderInfoController {
     @ApiOperation("订单查询-分页")
     @PostMapping("/v1/order/page")
     @ApiRequest
-    public Result<PageDTO<AdsOrderEntity>> page(@RequestBody @Validated BasePageParam param) {
-        PageDTO<AdsOrderEntity> pageResult = orderInfoService.page(param);
-        return Result.Success(pageResult);
+    public Result<PageDTO<AdminOrderResult>> page(@RequestBody @Validated BasePageParam param) {
+        return Result.Success(orderInfoService.page(param));
     }
 
     @ApiOperation("订单查询-详情")
