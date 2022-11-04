@@ -23,6 +23,6 @@ public interface AdminAdsInfoService {
 
     void off(AdsBaseParam param);
 
-    JSONObject upload(String openid, UploadParam param);
+    JSONObject upload( UploadParam param);
 
 }

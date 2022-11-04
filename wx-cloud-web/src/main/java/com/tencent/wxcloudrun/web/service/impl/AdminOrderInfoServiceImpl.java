@@ -4,13 +4,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
+import com.tencent.wxcloudrun.common.expection.BizException;
+import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import com.tencent.wxcloudrun.common.request.OrderDetailParam;
 import com.tencent.wxcloudrun.common.request.OrderPageParam;
+import com.tencent.wxcloudrun.common.request.WxUserBaseParam;
+import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
+import com.tencent.wxcloudrun.dao.entity.UserEntity;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
+import com.tencent.wxcloudrun.dao.repository.UserRepository;
 import com.tencent.wxcloudrun.web.service.AdminOrderInfoService;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +33,8 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
 
     @Autowired
     private AdsOrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public PageDTO<AdsOrderEntity> page(OrderPageParam param) {
@@ -41,6 +50,17 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
         if (order != null) {
             result = JSONObject.parseObject(order.getResp());
         }
+        return result;
+    }
+
+    @Override
+    public UserInfoResult linkUserInfo(WxUserBaseParam param) {
+        UserEntity userEntity = userRepository.getOneByOpenId(param.getOpenid());
+        if (userEntity == null) {
+            throw new BizException(ErrorCode.BIZ_BREAK, "用户信息不存在!");
+        }
+        UserInfoResult result = new UserInfoResult();
+        BeanUtils.copyProperties(userEntity, result);
         return result;
     }
 }

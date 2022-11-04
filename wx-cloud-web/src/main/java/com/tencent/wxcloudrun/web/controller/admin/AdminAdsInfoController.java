@@ -81,22 +81,21 @@ public class AdminAdsInfoController {
     @ApiOperation("广告后台-文件路径获取")
     @PostMapping("/v1/ads/pre-upload")
     @ApiRequest
-    public Result<JSONObject> getUploadUrl(@RequestHeader("x-wx-openid") String openid,
-                                           @RequestBody @Validated UploadParam param) {
-        JSONObject reqJson = adsInfoService.upload(openid, param);
+    public Result<JSONObject> getUploadUrl(@RequestBody @Validated UploadParam param) {
+        JSONObject reqJson = adsInfoService.upload(param);
         return Result.Success(reqJson);
     }
 
     @ApiOperation("广告后台-文件上传")
     @PostMapping("/v1/ads/upload")
     @ApiRequest
-    public Result<Void> uploadCallback(@RequestHeader("x-wx-openid") String openid,
-                                       @RequestParam("file") String file,
-                                       @RequestParam("key") String key,
-                                       @RequestParam("Signature") String signature,
-                                       @RequestParam("x-cos-security-token") String xCosSecurityToken,
-                                       @RequestParam("x-cos-meta-fileid") String xCosMetaileid) {
-        log.info("openid:{},x-cos-meta-fileid:{}", openid, xCosMetaileid);
+    public Result<Void> uploadCallback(
+            @RequestParam("file") String file,
+            @RequestParam("key") String key,
+            @RequestParam("Signature") String signature,
+            @RequestParam("x-cos-security-token") String xCosSecurityToken,
+            @RequestParam("x-cos-meta-fileid") String xCosMetaileid) {
+        log.info("x-cos-meta-fileid:{}", xCosMetaileid);
         return Result.Success();
     }
 

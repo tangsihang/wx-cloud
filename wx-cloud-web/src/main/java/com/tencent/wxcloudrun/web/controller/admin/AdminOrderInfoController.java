@@ -6,7 +6,9 @@ import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.OrderDetailParam;
 import com.tencent.wxcloudrun.common.request.OrderPageParam;
+import com.tencent.wxcloudrun.common.request.WxUserBaseParam;
 import com.tencent.wxcloudrun.common.response.Result;
+import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.web.service.AdminOrderInfoService;
 import io.swagger.annotations.Api;
@@ -47,6 +49,15 @@ public class AdminOrderInfoController {
         JSONObject respJson = orderInfoService.detail(param);
         return Result.Success(respJson);
     }
+
+    @ApiOperation("订单查询-详情")
+    @PostMapping("/v1/order/link-user-info")
+    @ApiRequest
+    public Result<UserInfoResult> linUserInfo(@RequestBody @Validated WxUserBaseParam param) {
+        UserInfoResult result = orderInfoService.linkUserInfo(param);
+        return Result.Success(result);
+    }
+
 
     @ApiOperation("订单查询-导出")
     @PostMapping("/v1/order/export")
