@@ -2,6 +2,7 @@ package com.tencent.wxcloudrun.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tencent.wxcloudrun.common.dto.RawDataDO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
@@ -54,21 +55,35 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public JSONObject login(String openid, UserLoginParam param) {
         String code = param.getCode();
+        String inviteCode = param.getInviteCode();
         JSONObject respJson = wxUserClient.login(code);
         String sessionKey = respJson.get("session_key").toString();
         UserEntity insertOrUpdateDO = buildUserEntity(param, sessionKey, openid);
         JSONObject userInfo = new JSONObject();
         UserEntity user = userRepository.getOneByOpenId(openid);
+        //TODO,这块逻辑梳理下
         if (user == null) {
             insertOrUpdateDO.setToken(NonceUtil.createNonce(32));
-            insertOrUpdateDO.setInviteCode(param.getInviteCode());
+            UserInviteCodeEntity inviteCodeEntity = inviteCodeRepository.getOneByOpenId(openid);
+            if (inviteCodeEntity != null) {
+                if (inviteCodeEntity.getInviteCode().equals(inviteCode)) {
+                    log.info("自己邀请自己，玩呢！");
+                    insertOrUpdateDO.setInviteCode("");
+                } else {
+                    insertOrUpdateDO.setInviteCode(param.getInviteCode());
+                    createInviteRelate(inviteCode, openid);
+                }
+            }
             userRepository.save(insertOrUpdateDO);
             userInfo.put("token", insertOrUpdateDO.getToken());
-            createInviteRelate(param.getInviteCode(), openid);
         } else {
             userInfo.put("token", user.getToken());
             // 已存在，做已存在的处理，如更新用户的头像，昵称等，根据openID更新，这里代码自己写
             userRepository.updateByOpenId(insertOrUpdateDO);
+
+            LambdaQueryWrapper<UserEntity> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(UserEntity::getOpenid, openid);
+            userRepository.update(insertOrUpdateDO, wrapper);
         }
         return userInfo;
     }
@@ -109,9 +124,16 @@ public class UserInfoServiceImpl implements UserInfoService {
         String code = param.getCode();
         JSONObject respJson = wxUserClient.getPhoneNum(code);
         String phoneNum = respJson.getString("phoneNumber");
+
+
         //获取手机号，更新用户信息.
         userEntity.setMobile(phoneNum);
-        userRepository.updateByOpenId(userEntity);
+
+        LambdaQueryWrapper<UserEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserEntity::getOpenid, openid);
+        UserEntity update = new UserEntity();
+        update.setMobile(phoneNum);
+        userRepository.update(update, wrapper);
         return respJson;
     }
 

@@ -112,12 +112,7 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     }
 
     private List<UserInfoResult> transferRecordForPage(IPage<UserEntity> record) {
-        List<UserInfoResult> userInfoResultList = Lists.newArrayList();
-        record.getRecords().forEach(it -> {
-            UserInfoResult result = buildUserInfoResult(it);
-            userInfoResultList.add(result);
-        });
-        return userInfoResultList;
+        return record.getRecords().stream().map(this::buildUserInfoResult).collect(Collectors.toList());
     }
 
     private UserInfoResult buildUserInfoResult(UserEntity userEntity) {
@@ -127,7 +122,6 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         UserInviteCodeEntity inviteCodeEntity = codeRepository.getOneByOpenId(openid);
         //若用户存在邀请码
         if (inviteCodeEntity != null) {
-            result.setInviteCode(inviteCodeEntity.getInviteCode());
             List<UserEntity> inviteUserList = userRepository.queryByInviteCode(inviteCodeEntity.getInviteCode());
             if (!CollectionUtils.isEmpty(inviteUserList)) {
                 List<String> inviteUserOpenIdList = inviteUserList.stream().map(UserEntity::getOpenid).collect(Collectors.toList());

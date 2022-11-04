@@ -39,8 +39,8 @@ public class AdminTest {
 
     @Test
     public void test_query_wx_user_page() {
-        int pageNo = 0;
-        int pageSize = 20;
+        int pageNo = 1;
+        int pageSize = 10;
         BasePageParam param = BasePageParam.builder().pageNo(pageNo).pageSize(pageSize).build();
         PageDTO<UserInfoResult> pageDTO = adminUserInfoService.page(param);
         log.info("{}", JSON.toJSONString(pageDTO));
