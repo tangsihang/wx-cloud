@@ -37,7 +37,7 @@ public class AdsInfoController {
     @ApiOperation("广告查询-详情")
     @PostMapping("/v1/ads/detail")
     @ApiRequest
-    public Result<AdsInfoEntity> detail(@RequestBody @Validated AdsBaseParam param) {
+    public Result<AdsInfoEntity> detail(@RequestBody @Validated BaseAdsParam param) {
         return Result.Success(adsInfoService.detail(param));
     }
 
@@ -55,7 +55,7 @@ public class AdsInfoController {
     @PostMapping("/v1/ads/refund")
     @ApiRequest
     public Result<JSONObject> refund(@RequestHeader("x-wx-openid") String openid,
-                                     @RequestBody @Validated WxRefundParam param) {
+                                     @RequestBody @Validated BaseOrderNoParam param) {
         JSONObject result = adsInfoService.refund(openid, param);
         return Result.Success(result);
     }
@@ -63,7 +63,7 @@ public class AdsInfoController {
     @ApiOperation("广告订单-查询")
     @PostMapping("/v1/ads/pay-query")
     @ApiRequest
-    public Result<JSONObject> payQuery(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated WxPayQueryParam param) {
+    public Result<JSONObject> payQuery(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated BaseOrderNoParam param) {
         JSONObject result = adsInfoService.payQuery(openid, param);
         return Result.Success(result);
     }
@@ -71,7 +71,7 @@ public class AdsInfoController {
     @ApiOperation("广告订单-关闭")
     @PostMapping("/v1/ads/pay-close")
     @ApiRequest
-    public Result<JSONObject> payClose(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated WxPayCloseParam param) {
+    public Result<JSONObject> payClose(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated BaseOrderNoParam param) {
         JSONObject result = adsInfoService.payClose(openid, param);
         return Result.Success(result);
     }

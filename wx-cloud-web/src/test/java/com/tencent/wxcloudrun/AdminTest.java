@@ -3,9 +3,8 @@ package com.tencent.wxcloudrun;
 import com.alibaba.fastjson.JSON;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.PageBaseParam;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
-import com.tencent.wxcloudrun.dao.entity.UserEntity;
 import com.tencent.wxcloudrun.web.WxCloudRunApplication;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +42,7 @@ public class AdminTest {
     public void test_query_wx_user_page() {
         int pageNo = 0;
         int pageSize = 20;
-        PageBaseParam param = PageBaseParam.builder().pageNo(pageNo).pageSize(pageSize).build();
+        BasePageParam param = BasePageParam.builder().pageNo(pageNo).pageSize(pageSize).build();
         PageDTO<UserInfoResult> pageDTO = adminUserInfoService.page(param);
         log.info("{}", JSON.toJSONString(pageDTO));
     }

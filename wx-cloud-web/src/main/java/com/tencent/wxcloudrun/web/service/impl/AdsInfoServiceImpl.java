@@ -63,7 +63,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     }
 
     @Override
-    public AdsInfoEntity detail(AdsBaseParam param) {
+    public AdsInfoEntity detail(BaseAdsParam param) {
         return adsInfoRepository.getById(param.getId());
     }
 
@@ -88,7 +88,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     }
 
     @Override
-    public JSONObject refund(String openid, WxRefundParam param) {
+    public JSONObject refund(String openid, BaseOrderNoParam param) {
         String outTradeNo = param.getOutTradeNo();
         AdsOrderEntity order = adsOrderRepository.getOneByOrderNo(outTradeNo);
         if (order == null) {
@@ -118,7 +118,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     }
 
     @Override
-    public JSONObject payQuery(String openid, WxPayQueryParam param) {
+    public JSONObject payQuery(String openid, BaseOrderNoParam param) {
         JSONObject reqJson = (JSONObject) JSONObject.toJSON(param);
         reqJson.put("sub_mch_id", AppConstant.WX_MERCHANT_ID);
         WxEventEnum event = WxEventEnum.QUERY_ORDER;
@@ -128,7 +128,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
     }
 
     @Override
-    public JSONObject payClose(String openid, WxPayCloseParam param) {
+    public JSONObject payClose(String openid, BaseOrderNoParam param) {
         JSONObject reqJson = (JSONObject) JSONObject.toJSON(param);
         reqJson.put("sub_mch_id", AppConstant.WX_MERCHANT_ID);
         WxEventEnum event = WxEventEnum.CLOSE_ORDER;

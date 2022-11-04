@@ -10,14 +10,15 @@ import java.io.Serializable;
 
 /**
  * @author tangsh
- * @date 2022/11/04
+ * @date 2022/10/31
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class InviteDetailParam implements Serializable {
+public class BaseOrderNoParam implements Serializable {
 
-    @NotNull(message = "邀请码不能为空")
-    private String inviteCode;
+    @NotNull(message = "订单号不能为空")
+    private String outTradeNo;
+
 }

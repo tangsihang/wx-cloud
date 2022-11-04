@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
-import com.tencent.wxcloudrun.common.request.OrderDetailParam;
-import com.tencent.wxcloudrun.common.request.OrderPageParam;
+import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 import com.tencent.wxcloudrun.web.service.OrderInfoService;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private AdsOrderRepository orderRepository;
 
     @Override
-    public PageDTO<AdsOrderEntity> page(String openid, OrderPageParam param) {
+    public PageDTO<AdsOrderEntity> page(String openid, BasePageParam param) {
         IPage<AdsOrderEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         LambdaQueryWrapper<AdsOrderEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AdsOrderEntity::getOpenid, openid);
@@ -32,7 +32,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     }
 
     @Override
-    public JSONObject detail(OrderDetailParam param) {
+    public JSONObject detail(BaseOrderNoParam param) {
         AdsOrderEntity order = orderRepository.getOneByOrderNo(param.getOutTradeNo());
         JSONObject result = null;
         if (order != null) {

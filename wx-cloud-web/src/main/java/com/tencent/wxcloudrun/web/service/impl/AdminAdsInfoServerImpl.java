@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tencent.wxcloudrun.common.constants.AdsStatusEnum;
-import com.tencent.wxcloudrun.common.constants.AppConstant;
 import com.tencent.wxcloudrun.common.constants.CategoryEnum;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
@@ -56,7 +55,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     }
 
     @Override
-    public AdsInfoEntity detail(AdsBaseParam param) {
+    public AdsInfoEntity detail(BaseAdsParam param) {
         return adsInfoRepository.getById(param.getId());
     }
 
@@ -83,7 +82,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     }
 
     @Override
-    public void on(AdsBaseParam param) {
+    public void on(BaseAdsParam param) {
         AdsInfoEntity entity = checkAdsExist(param.getId());
         if (AdsStatusEnum.ON.name().equals(entity.getStatus())) {
             throw new BizException(ErrorCode.BIZ_BREAK, "已经是上架状态,无需再上架!");
@@ -96,7 +95,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
 
 
     @Override
-    public void off(AdsBaseParam param) {
+    public void off(BaseAdsParam param) {
         AdsInfoEntity entity = checkAdsExist(param.getId());
         if (AdsStatusEnum.OFF.name().equals(entity.getStatus())) {
             throw new BizException(ErrorCode.BIZ_BREAK, "已经是下架状态,无需再下架!");

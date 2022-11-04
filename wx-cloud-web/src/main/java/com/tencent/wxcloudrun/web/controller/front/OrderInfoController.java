@@ -4,9 +4,9 @@ package com.tencent.wxcloudrun.web.controller.front;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
-import com.tencent.wxcloudrun.common.request.OrderDetailParam;
-import com.tencent.wxcloudrun.common.request.OrderPageParam;
+import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 import com.tencent.wxcloudrun.common.response.Result;
 import com.tencent.wxcloudrun.web.service.OrderInfoService;
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ public class OrderInfoController {
     @ApiOperation("订单查询-分页")
     @PostMapping("/v1/order/page")
     @ApiRequest
-    public Result<PageDTO<AdsOrderEntity>> page(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated OrderPageParam param) {
+    public Result<PageDTO<AdsOrderEntity>> page(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated BasePageParam param) {
         PageDTO<AdsOrderEntity> pageResult = orderInfoService.page(openid, param);
         return Result.Success(pageResult);
     }
@@ -38,7 +38,7 @@ public class OrderInfoController {
     @ApiOperation("订单查询-详情")
     @PostMapping("/v1/order/detail")
     @ApiRequest
-    public Result<JSONObject> detail(@RequestBody @Validated OrderDetailParam param) {
+    public Result<JSONObject> detail(@RequestBody @Validated BaseOrderNoParam param) {
         return Result.Success(orderInfoService.detail(param));
     }
 }

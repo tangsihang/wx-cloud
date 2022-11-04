@@ -13,15 +13,15 @@ public interface AdminAdsInfoService {
 
     PageDTO<AdsInfoEntity> page(AdsPageParam param);
 
-    AdsInfoEntity detail(AdsBaseParam param);
+    AdsInfoEntity detail(BaseAdsParam param);
 
     void create(AdsCreateParam param);
 
     void edit(AdsEditParam param);
 
-    void on(AdsBaseParam param);
+    void on(BaseAdsParam param);
 
-    void off(AdsBaseParam param);
+    void off(BaseAdsParam param);
 
     JSONObject upload( UploadParam param);
 

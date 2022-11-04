@@ -2,9 +2,10 @@ package com.tencent.wxcloudrun.web.service;
 
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.InviteDetailParam;
-import com.tencent.wxcloudrun.common.request.PageBaseParam;
-import com.tencent.wxcloudrun.common.response.InviteRelateResult;
+import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
+import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
+import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 
 import java.util.List;
@@ -17,8 +18,10 @@ public interface AdminUserInfoService {
 
     void login(AdminUserLoginParam param);
 
-    PageDTO<UserInfoResult> page(PageBaseParam param);
+    PageDTO<UserInfoResult> page(BasePageParam param);
 
-    List<InviteRelateResult> inviteDetail(InviteDetailParam param);
+    List<InviteUserDetailResult> inviteUserDetail(BaseInviteCodeParam param);
+
+    List<InvitePayDetailResult> invitePayDetail(BaseInviteCodeParam param);
 
 }

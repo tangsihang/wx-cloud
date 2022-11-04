@@ -2,9 +2,9 @@ package com.tencent.wxcloudrun.web.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
-import com.tencent.wxcloudrun.common.request.OrderDetailParam;
-import com.tencent.wxcloudrun.common.request.OrderPageParam;
+import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 
 /**
  * @author tangsh
@@ -12,7 +12,7 @@ import com.tencent.wxcloudrun.common.request.OrderPageParam;
  */
 public interface OrderInfoService {
 
-    PageDTO<AdsOrderEntity> page(String openid, OrderPageParam param);
+    PageDTO<AdsOrderEntity> page(String openid, BasePageParam param);
 
-    JSONObject detail(OrderDetailParam param);
+    JSONObject detail(BaseOrderNoParam param);
 }

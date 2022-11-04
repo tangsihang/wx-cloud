@@ -41,14 +41,14 @@ public class AdminAdsInfoController {
     @ApiOperation("广告后台-详情")
     @PostMapping("/v1/ads/detail")
     @ApiRequest
-    public Result<AdsInfoEntity> detail(@RequestBody @Validated AdsBaseParam param) {
+    public Result<AdsInfoEntity> detail(@RequestBody @Validated BaseAdsParam param) {
         return Result.Success(adsInfoService.detail(param));
     }
 
     @ApiOperation("广告后台-上架")
     @PostMapping("/v1/ads/status-on")
     @ApiRequest
-    public Result<Void> statusOn(@RequestBody @Validated AdsBaseParam param) {
+    public Result<Void> statusOn(@RequestBody @Validated BaseAdsParam param) {
         adsInfoService.on(param);
         return Result.Success();
     }
@@ -56,7 +56,7 @@ public class AdminAdsInfoController {
     @ApiOperation("广告后台-下架")
     @PostMapping("/v1/ads/status-off")
     @ApiRequest
-    public Result<Void> statusOff(@RequestBody @Validated AdsBaseParam param) {
+    public Result<Void> statusOff(@RequestBody @Validated BaseAdsParam param) {
         adsInfoService.off(param);
         return Result.Success();
     }
@@ -85,20 +85,6 @@ public class AdminAdsInfoController {
         JSONObject reqJson = adsInfoService.upload(param);
         return Result.Success(reqJson);
     }
-
-    @ApiOperation("广告后台-文件上传")
-    @PostMapping("/v1/ads/upload")
-    @ApiRequest
-    public Result<Void> uploadCallback(
-            @RequestParam("file") String file,
-            @RequestParam("key") String key,
-            @RequestParam("Signature") String signature,
-            @RequestParam("x-cos-security-token") String xCosSecurityToken,
-            @RequestParam("x-cos-meta-fileid") String xCosMetaileid) {
-        log.info("x-cos-meta-fileid:{}", xCosMetaileid);
-        return Result.Success();
-    }
-
 
     @ApiOperation("广告后台-test请求头")
     @PostMapping("/v1/ads/test")

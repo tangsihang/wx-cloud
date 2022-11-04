@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.common.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,17 +11,15 @@ import java.io.Serializable;
 
 /**
  * @author tangsh
- * @date 2022/10/31
+ * @date 2022/11/04
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderPageParam implements Serializable {
+public class BaseInviteCodeParam implements Serializable {
 
-    @NotNull(message = "起始页不能为空")
-    private Integer pageNo;
-
-    @NotNull(message = "分页大小不能为空")
-    private Integer pageSize;
+    @NotNull(message = "邀请码不能为空")
+    @ApiModelProperty(value = "邀请码不能为空", required = true)
+    private String inviteCode;
 }

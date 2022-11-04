@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdsBaseParam {
+public class BaseAdsParam {
 
     @NotNull(message = "广告id不能为空")
     private Integer id;

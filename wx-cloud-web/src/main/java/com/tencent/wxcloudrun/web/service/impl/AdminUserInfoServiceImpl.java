@@ -8,9 +8,10 @@ import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.InviteDetailParam;
-import com.tencent.wxcloudrun.common.request.PageBaseParam;
-import com.tencent.wxcloudrun.common.response.InviteRelateResult;
+import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
+import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
+import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.dao.entity.UserEntity;
@@ -71,7 +72,7 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     }
 
     @Override
-    public PageDTO<UserInfoResult> page(PageBaseParam param) {
+    public PageDTO<UserInfoResult> page(BasePageParam param) {
         IPage<UserEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         IPage<UserEntity> record = userRepository.page(page);
         if (record.getTotal() == 0) {
@@ -82,17 +83,18 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     }
 
     @Override
-    public List<InviteRelateResult> inviteDetail(InviteDetailParam param) {
+    public List<InviteUserDetailResult> inviteUserDetail(BaseInviteCodeParam param) {
         String inviteCode = param.getInviteCode();
         List<UserInviteRelateEntity> inviteRelateList = relateRepository.queryByInviteCode(inviteCode);
         if (CollectionUtils.isEmpty(inviteRelateList)) {
             return Lists.newArrayList();
         }
-        List<InviteRelateResult> resultList = Lists.newArrayList();
+        List<InviteUserDetailResult> resultList = Lists.newArrayList();
         inviteRelateList.forEach(it -> {
-            InviteRelateResult result = new InviteRelateResult();
+            InviteUserDetailResult result = new InviteUserDetailResult();
             result.setInviteOpenid(it.getInviteOpenid());
             result.setInviteCode(it.getInviteCode());
+            result.setCreated(it.getCreated());
             String inviteOpenid = it.getInviteOpenid();
             UserEntity userEntity = userRepository.getOneByOpenId(inviteOpenid);
             if (userEntity == null) {
@@ -103,6 +105,14 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         });
         return resultList;
     }
+
+    @Override
+    public List<InvitePayDetailResult> invitePayDetail(BaseInviteCodeParam param) {
+        return null;
+    }
+
+
+
 
     private List<UserInfoResult> transferRecordForPage(IPage<UserEntity> record) {
         List<UserInfoResult> userInfoResultList = Lists.newArrayList();

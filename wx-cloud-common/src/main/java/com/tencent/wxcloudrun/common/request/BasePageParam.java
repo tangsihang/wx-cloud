@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageBaseParam implements Serializable {
+public class BasePageParam implements Serializable {
 
     @NotNull(message = "起始页不能为空")
     private Integer pageNo;

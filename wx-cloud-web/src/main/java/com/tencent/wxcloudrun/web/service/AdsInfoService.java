@@ -14,13 +14,13 @@ public interface AdsInfoService {
 
     PageDTO<AdsInfoEntity> page(AdsPageParam param);
 
-    AdsInfoEntity detail(AdsBaseParam param);
+    AdsInfoEntity detail(BaseAdsParam param);
 
     JSONObject prePay(String openid, String ip, WxPrePayParam param);
 
-    JSONObject refund(String openid, WxRefundParam param);
+    JSONObject refund(String openid, BaseOrderNoParam param);
 
-    JSONObject payQuery(String openid, WxPayQueryParam param);
+    JSONObject payQuery(String openid, BaseOrderNoParam param);
 
-    JSONObject payClose(String openid, WxPayCloseParam param);
+    JSONObject payClose(String openid, BaseOrderNoParam param);
 }
