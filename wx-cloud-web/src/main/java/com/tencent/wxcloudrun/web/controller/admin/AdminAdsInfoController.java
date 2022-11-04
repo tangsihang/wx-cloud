@@ -21,7 +21,7 @@ import java.util.Map;
  * @author tangsh
  * @date 2022/10/27
  */
-@Api(tags = "广告后台模块")
+@Api(tags = "广告管理-后台模块")
 @RestController
 @RequestMapping("/admin")
 @Slf4j
