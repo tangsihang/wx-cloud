@@ -31,8 +31,8 @@ public class UserInfoController {
     @ApiOperation("用户模块-登录")
     @PostMapping("/v1/user/login")
     @ApiRequest
-    public Result<JSONObject> login(@RequestBody @Validated UserLoginParam param) {
-        return Result.Success(userInfoService.login(param));
+    public Result<JSONObject> login(@RequestHeader("x-wx-openid") String openid, @RequestBody @Validated UserLoginParam param) {
+        return Result.Success(userInfoService.login(openid, param));
     }
 
     @ApiOperation("用户模块-获取用户信息")

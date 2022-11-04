@@ -28,7 +28,7 @@ public class UserRepository extends BaseRepository<UserMapper, UserEntity> {
 
     public void updateByOpenId(UserEntity update) {
         LambdaQueryWrapper<UserEntity> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(UserEntity::getOpenid, update);
+        wrapper.eq(UserEntity::getOpenid, update.getOpenid());
         this.update(update, wrapper);
     }
 

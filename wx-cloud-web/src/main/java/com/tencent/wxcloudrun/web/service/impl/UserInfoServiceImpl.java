@@ -2,22 +2,22 @@ package com.tencent.wxcloudrun.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.tencent.wxcloudrun.dao.entity.UserInviteRelateEntity;
-import com.tencent.wxcloudrun.dao.repository.UserInviteRelateRepository;
-import com.tencent.wxcloudrun.web.client.WxUserClient;
 import com.tencent.wxcloudrun.common.dto.RawDataDO;
-import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
-import com.tencent.wxcloudrun.dao.entity.UserEntity;
-import com.tencent.wxcloudrun.dao.entity.UserInviteCodeEntity;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
-import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
-import com.tencent.wxcloudrun.dao.repository.UserInviteCodeRepository;
-import com.tencent.wxcloudrun.dao.repository.UserRepository;
 import com.tencent.wxcloudrun.common.request.UserCodeParam;
 import com.tencent.wxcloudrun.common.request.UserInfoParam;
 import com.tencent.wxcloudrun.common.request.UserLoginParam;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
+import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
+import com.tencent.wxcloudrun.dao.entity.UserEntity;
+import com.tencent.wxcloudrun.dao.entity.UserInviteCodeEntity;
+import com.tencent.wxcloudrun.dao.entity.UserInviteRelateEntity;
+import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
+import com.tencent.wxcloudrun.dao.repository.UserInviteCodeRepository;
+import com.tencent.wxcloudrun.dao.repository.UserInviteRelateRepository;
+import com.tencent.wxcloudrun.dao.repository.UserRepository;
+import com.tencent.wxcloudrun.web.client.WxUserClient;
 import com.tencent.wxcloudrun.web.service.UserInfoService;
 import com.tencent.wxcloudrun.web.utils.EncryptUtils;
 import com.tencent.wxcloudrun.web.utils.NonceUtil;
@@ -52,11 +52,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 
     @Override
-    public JSONObject login(UserLoginParam param) {
+    public JSONObject login(String openid, UserLoginParam param) {
         String code = param.getCode();
         JSONObject respJson = wxUserClient.login(code);
         String sessionKey = respJson.get("session_key").toString();
-        String openid = respJson.get("openid").toString();
         UserEntity insertOrUpdateDO = buildUserEntity(param, sessionKey, openid);
         JSONObject userInfo = new JSONObject();
         UserEntity user = userRepository.getOneByOpenId(openid);

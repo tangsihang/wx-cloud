@@ -13,7 +13,7 @@ import com.tencent.wxcloudrun.common.response.UserInfoResult;
 
 public interface UserInfoService {
 
-    JSONObject login(UserLoginParam param);
+    JSONObject login(String openid, UserLoginParam param);
 
     JSONObject getPhoneNum(String openid, UserCodeParam param);
 
