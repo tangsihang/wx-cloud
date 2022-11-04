@@ -25,7 +25,7 @@ public class WebhookServiceImpl implements WebhookService {
     public JSONObject respWxPayHook(JSONObject req) {
         log.info("微信下单-回调成功:{}", req.toJSONString());
         String outTradeNo = req.getString("outTradeNo");
-        String openid = req.getString("openid");
+        String openid = req.getString("subOpenid");
         Integer totalFee = req.getInteger("totalFee");
         AdsOrderEntity orderEntity = adsOrderRepository.getOneByOrderNo(outTradeNo);
         if (orderEntity != null) {
