@@ -17,4 +17,10 @@ public class UserInviteCodeRepository extends BaseRepository<UserInviteCodeMappe
         wrapper.eq(UserInviteCodeEntity::getOpenid, openid);
         return this.getOne(wrapper);
     }
+
+    public UserInviteCodeEntity getOneByInviteCode(String inviteCode) {
+        LambdaQueryWrapper<UserInviteCodeEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserInviteCodeEntity::getInviteCode, inviteCode);
+        return this.getOne(wrapper);
+    }
 }

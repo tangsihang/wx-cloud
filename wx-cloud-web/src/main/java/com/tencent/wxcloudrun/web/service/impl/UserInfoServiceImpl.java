@@ -2,6 +2,8 @@ package com.tencent.wxcloudrun.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tencent.wxcloudrun.dao.entity.UserInviteRelateEntity;
+import com.tencent.wxcloudrun.dao.repository.UserInviteRelateRepository;
 import com.tencent.wxcloudrun.web.client.WxUserClient;
 import com.tencent.wxcloudrun.common.dto.RawDataDO;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
@@ -45,6 +47,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInviteCodeRepository inviteCodeRepository;
     @Autowired
     private AdsOrderRepository adsOrderRepository;
+    @Autowired
+    private UserInviteRelateRepository inviteRelateRepository;
 
 
     @Override
@@ -61,6 +65,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             insertOrUpdateDO.setInviteCode(param.getInviteCode());
             userRepository.save(insertOrUpdateDO);
             userInfo.put("token", insertOrUpdateDO.getToken());
+            createInviteRelate(param.getInviteCode(), openid);
         } else {
             userInfo.put("token", user.getToken());
             // 已存在，做已存在的处理，如更新用户的头像，昵称等，根据openID更新，这里代码自己写
@@ -109,6 +114,20 @@ public class UserInfoServiceImpl implements UserInfoService {
         userEntity.setMobile(phoneNum);
         userRepository.updateByOpenId(userEntity);
         return respJson;
+    }
+
+    private void createInviteRelate(String inviteCode, String inviteOpenid) {
+        UserInviteCodeEntity userInviteCodeEntity = inviteCodeRepository.getOneByInviteCode(inviteCode);
+        if (userInviteCodeEntity == null) {
+            log.error("邀请码对应的客户信息不存在!:{}", inviteCode);
+            return;
+        }
+        String openid = userInviteCodeEntity.getOpenid();
+        UserInviteRelateEntity entity = new UserInviteRelateEntity();
+        entity.setOpenid(openid);
+        entity.setInviteCode(inviteCode);
+        entity.setInviteOpenid(inviteOpenid);
+        inviteRelateRepository.save(entity);
     }
 
     private UserEntity buildUserEntity(UserLoginParam param, String sessionKey, String openid) {

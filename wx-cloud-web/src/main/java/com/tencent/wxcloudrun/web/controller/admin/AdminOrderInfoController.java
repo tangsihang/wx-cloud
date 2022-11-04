@@ -50,7 +50,7 @@ public class AdminOrderInfoController {
         return Result.Success(respJson);
     }
 
-    @ApiOperation("订单查询-详情")
+    @ApiOperation("订单查询-关联用户")
     @PostMapping("/v1/order/link-user-info")
     @ApiRequest
     public Result<UserInfoResult> linUserInfo(@RequestBody @Validated WxUserBaseParam param) {
