@@ -31,4 +31,6 @@ public interface AdminAdsInfoService {
 
     List<InviteUserDetailResult> payUserDetail(BaseAdsParam param);
 
+    void updateVirtualNum(AdsVirtualNumEditParam param);
+
 }

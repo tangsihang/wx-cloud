@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 public class AdsPageInfoResult implements Serializable {
 
+    private Integer id;
     private String title;
     private String des;
     private String img;

@@ -112,6 +112,13 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     }
 
     @Override
+    public void updateVirtualNum(AdsVirtualNumEditParam param) {
+        AdsInfoEntity update = new AdsInfoEntity();
+        BeanUtils.copyProperties(param, update);
+        adsInfoRepository.updateById(update);
+    }
+
+    @Override
     public void on(BaseAdsParam param) {
         AdsInfoEntity entity = checkAdsExist(param.getId());
         if (AdsStatusEnum.ON.name().equals(entity.getStatus())) {
@@ -165,6 +172,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         });
         return resultList;
     }
+
 
     private AdsInfoEntity checkAdsExist(Integer id) {
         AdsInfoEntity entity = adsInfoRepository.getById(id);

@@ -79,6 +79,14 @@ public class AdminAdsInfoController {
         return Result.Success();
     }
 
+    @ApiOperation("广告后台-编辑")
+    @PostMapping("/v1/ads/edit-virtual-num")
+    @ApiRequest
+    public Result<Void> updateVirtualNum(@RequestBody @Validated AdsVirtualNumEditParam param) {
+        adsInfoService.updateVirtualNum(param);
+        return Result.Success();
+    }
+
 
     @ApiOperation("广告后台-文件路径获取")
     @PostMapping("/v1/ads/pre-upload")
