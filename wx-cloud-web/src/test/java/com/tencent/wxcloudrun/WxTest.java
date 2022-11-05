@@ -3,7 +3,9 @@ package com.tencent.wxcloudrun;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.request.*;
+import com.tencent.wxcloudrun.common.request.AdsPageParam;
+import com.tencent.wxcloudrun.common.request.BasePageParam;
+import com.tencent.wxcloudrun.common.request.UserLoginParam;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.web.WxCloudRunApplication;
@@ -40,7 +42,9 @@ public class WxTest {
     public void test_query_ads_page() {
         int pageNo = 0;
         int pageSize = 20;
-        AdsPageParam param = AdsPageParam.builder().pageNo(pageNo).pageSize(pageSize).build();
+        AdsPageParam param = new AdsPageParam();
+        param.setPageNo(pageNo);
+        param.setPageSize(pageSize);
         PageDTO<AdsInfoEntity> pageDTO = adsInfoService.page(param);
         log.info("{}", JSON.toJSONString(pageDTO));
     }

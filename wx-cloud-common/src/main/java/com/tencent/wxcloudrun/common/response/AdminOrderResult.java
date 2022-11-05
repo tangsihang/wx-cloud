@@ -16,8 +16,10 @@ public class AdminOrderResult implements Serializable {
     private String outTradeNo;
     private Integer amount;
     private String currency;
+    private String status;
     private String businessType;
     private String orderType;
+    private Integer adsId;
     private String mobile;
     private String title;
     private Integer fee;

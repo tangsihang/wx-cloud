@@ -184,6 +184,12 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         return record.getRecords().stream().map(this::buildUserInfoResult).collect(Collectors.toList());
     }
 
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> set = ConcurrentHashMap.newKeySet();
+        return t -> set.add(keyExtractor.apply(t));
+    }
+
     private UserInfoResult buildUserInfoResult(UserEntity userEntity) {
         String openid = userEntity.getOpenid();
         UserInfoResult result = new UserInfoResult();
@@ -214,10 +220,5 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
             }
         }
         return result;
-    }
-
-    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-        Set<Object> set = ConcurrentHashMap.newKeySet();
-        return t -> set.add(keyExtractor.apply(t));
     }
 }

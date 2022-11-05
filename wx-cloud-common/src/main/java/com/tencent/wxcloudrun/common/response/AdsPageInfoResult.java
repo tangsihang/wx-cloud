@@ -1,15 +1,15 @@
-package com.tencent.wxcloudrun.dao.entity;
+package com.tencent.wxcloudrun.common.response;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * @author tangsh
- * @date 2022/10/30
+ * @date 2022/11/05
  */
 @Data
-@TableName("ads_info")
-public class AdsInfoEntity extends BaseDO {
+public class AdsPageInfoResult implements Serializable {
 
     private String title;
     private String des;
@@ -18,5 +18,7 @@ public class AdsInfoEntity extends BaseDO {
     private String content;
     private String category;
     private String status;
+
+    private Integer payNum;
     private Integer virtualNum;
 }

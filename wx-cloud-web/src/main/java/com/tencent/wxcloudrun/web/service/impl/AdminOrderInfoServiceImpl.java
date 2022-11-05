@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
 
-
     @Autowired
     private AdsOrderRepository orderRepository;
     @Autowired
@@ -56,7 +55,7 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
         if (StringUtils.hasLength(param.getOutTradeNo())) {
             queryWrapper.like(AdsOrderEntity::getOutTradeNo, param.getOutTradeNo());
         }
-        IPage<AdsOrderEntity> record = orderRepository.page(page);
+        IPage<AdsOrderEntity> record = orderRepository.page(page, queryWrapper);
         List<AdminOrderResult> resultList = transferRecordForPage(record);
         return PageUtils.copyWithRecords(record, resultList);
     }
@@ -96,12 +95,11 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
         }
         AdsInfoEntity adsInfoEntity = adsInfoRepository.getById(orderEntity.getMid());
         if (adsInfoEntity != null) {
+            result.setAdsId(adsInfoEntity.getId());
             result.setCategory(adsInfoEntity.getCategory());
             result.setTitle(adsInfoEntity.getTitle());
             result.setFee(adsInfoEntity.getFee());
         }
         return result;
     }
-
-
 }

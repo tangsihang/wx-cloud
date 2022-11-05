@@ -17,18 +17,28 @@ public class AdsOrderRepository extends BaseRepository<AdsOrderMapper, AdsOrderE
     public AdsOrderEntity getOneByOrderNo(String outTradeNo) {
         LambdaQueryWrapper<AdsOrderEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AdsOrderEntity::getOutTradeNo, outTradeNo);
+        wrapper.eq(AdsOrderEntity::getStatus, "SUCCESS");
         return this.getOne(wrapper);
     }
 
     public List<AdsOrderEntity> queryByOpenIdList(List<String> openidList) {
         LambdaQueryWrapper<AdsOrderEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(AdsOrderEntity::getOpenid, openidList);
+        wrapper.eq(AdsOrderEntity::getStatus, "SUCCESS");
         return this.list(wrapper);
     }
 
     public List<AdsOrderEntity> queryByOpenId(String openid) {
         LambdaQueryWrapper<AdsOrderEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AdsOrderEntity::getOpenid, openid);
+        wrapper.eq(AdsOrderEntity::getStatus, "SUCCESS");
+        return this.list(wrapper);
+    }
+
+    public List<AdsOrderEntity> queryByMid(Integer mid) {
+        LambdaQueryWrapper<AdsOrderEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AdsOrderEntity::getMid, mid);
+        wrapper.eq(AdsOrderEntity::getStatus, "SUCCESS");
         return this.list(wrapper);
     }
 }

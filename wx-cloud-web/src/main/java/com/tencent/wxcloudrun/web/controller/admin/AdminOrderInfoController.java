@@ -6,12 +6,10 @@ import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.AdminOrderPageParam;
 import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
-import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
 import com.tencent.wxcloudrun.common.response.AdminOrderResult;
 import com.tencent.wxcloudrun.common.response.Result;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
-import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.web.service.AdminOrderInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,7 +61,7 @@ public class AdminOrderInfoController {
     @ApiOperation("订单查询-导出")
     @PostMapping("/v1/order/export")
     @ApiRequest
-    public Result<Void> export(@RequestBody @Validated BasePageParam param) {
+    public Result<Void> export(@RequestBody @Validated AdminOrderPageParam param) {
         return Result.Success();
     }
 

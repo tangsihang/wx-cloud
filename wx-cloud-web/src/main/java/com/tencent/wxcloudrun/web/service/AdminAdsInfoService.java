@@ -3,7 +3,11 @@ package com.tencent.wxcloudrun.web.service;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.*;
+import com.tencent.wxcloudrun.common.response.AdsPageInfoResult;
+import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
+
+import java.util.List;
 
 /**
  * @author tangsh
@@ -11,7 +15,7 @@ import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
  */
 public interface AdminAdsInfoService {
 
-    PageDTO<AdsInfoEntity> page(AdsPageParam param);
+    PageDTO<AdsPageInfoResult> page(AdsPageParam param);
 
     AdsInfoEntity detail(BaseAdsParam param);
 
@@ -23,6 +27,8 @@ public interface AdminAdsInfoService {
 
     void off(BaseAdsParam param);
 
-    JSONObject upload( UploadParam param);
+    JSONObject upload(UploadParam param);
+
+    List<InviteUserDetailResult> payUserDetail(BaseAdsParam param);
 
 }

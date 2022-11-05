@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * @author tangsh
  * @date 2022/10/27
@@ -15,13 +13,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdsPageParam {
-
-    @NotNull(message = "起始页不能为空")
-    private Integer pageNo;
-
-    @NotNull(message = "分页大小不能为空")
-    private Integer pageSize;
+public class AdsPageParam extends BasePageParam {
 
     private String title;
 

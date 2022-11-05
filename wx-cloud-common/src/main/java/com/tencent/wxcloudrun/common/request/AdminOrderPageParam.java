@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -21,10 +20,4 @@ public class AdminOrderPageParam extends BasePageParam implements Serializable {
     private String outTradeNo;
 
     private String status;
-
-    @NotNull(message = "起始页不能为空")
-    private Integer pageNo;
-
-    @NotNull(message = "分页大小不能为空")
-    private Integer pageSize;
 }
