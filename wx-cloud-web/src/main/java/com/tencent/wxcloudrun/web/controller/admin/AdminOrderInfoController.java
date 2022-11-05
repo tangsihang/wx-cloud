@@ -4,6 +4,7 @@ package com.tencent.wxcloudrun.web.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
+import com.tencent.wxcloudrun.common.request.AdminOrderPageParam;
 import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
@@ -38,7 +39,7 @@ public class AdminOrderInfoController {
     @ApiOperation("订单查询-分页")
     @PostMapping("/v1/order/page")
     @ApiRequest
-    public Result<PageDTO<AdminOrderResult>> page(@RequestBody @Validated BasePageParam param) {
+    public Result<PageDTO<AdminOrderResult>> page(@RequestBody @Validated AdminOrderPageParam param) {
         return Result.Success(orderInfoService.page(param));
     }
 

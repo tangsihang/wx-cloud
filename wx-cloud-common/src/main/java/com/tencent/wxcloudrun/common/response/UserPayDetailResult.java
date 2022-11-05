@@ -10,16 +10,11 @@ import java.util.Date;
  * @date 2022/11/04
  */
 @Data
-public class InvitePayDetailResult implements Serializable {
+public class UserPayDetailResult implements Serializable {
 
-    private String openid;
-    private String mobile;
-    private String nickname;
-    private String outTradeNo;
     private Integer adsId;
     private String title;
     private String category;
     private Integer fee;
     private Date created;
-
 }

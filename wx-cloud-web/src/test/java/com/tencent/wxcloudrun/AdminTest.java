@@ -2,10 +2,12 @@ package com.tencent.wxcloudrun;
 
 import com.alibaba.fastjson.JSON;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
+import com.tencent.wxcloudrun.common.request.AdminOrderPageParam;
 import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
+import com.tencent.wxcloudrun.common.request.AdminUserPageParam;
 import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
-import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.common.response.AdminOrderResult;
+import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.web.WxCloudRunApplication;
@@ -41,12 +43,25 @@ public class AdminTest {
         adminUserInfoService.login(param);
     }
 
+    @Test
+    public void test_query_wx_user_page() {
+        int pageNo = 1;
+        int pageSize = 10;
+        AdminUserPageParam param = new AdminUserPageParam();
+        param.setPageNo(pageNo);
+        param.setPageSize(pageSize);
+        PageDTO<UserInfoResult> pageDTO = adminUserInfoService.page(param);
+        log.info("{}", JSON.toJSONString(pageDTO));
+    }
+
 
     @Test
-    public void test_query_wx_order_page() {
+    public void test_query_order_page() {
         int pageNo = 0;
         int pageSize = 20;
-        BasePageParam param = BasePageParam.builder().pageNo(pageNo).pageSize(pageSize).build();
+        AdminOrderPageParam param = new AdminOrderPageParam();
+        param.setPageNo(pageNo);
+        param.setPageSize(pageSize);
         PageDTO<AdminOrderResult> pageDTO = adminOrderInfoService.page(param);
         log.info("{}", JSON.toJSONString(pageDTO));
     }
@@ -56,6 +71,14 @@ public class AdminTest {
         BaseInviteCodeParam param = new BaseInviteCodeParam();
         param.setInviteCode("trlcgt");
         List<InviteUserDetailResult> result = adminUserInfoService.inviteUserDetail(param);
+        log.info("{}", JSON.toJSONString(result));
+    }
+
+    @Test
+    public void test_query_invite_pay_detail() {
+        BaseInviteCodeParam param = new BaseInviteCodeParam();
+        param.setInviteCode("trlcgt");
+        List<InvitePayDetailResult> result = adminUserInfoService.invitePayDetail(param);
         log.info("{}", JSON.toJSONString(result));
     }
 }

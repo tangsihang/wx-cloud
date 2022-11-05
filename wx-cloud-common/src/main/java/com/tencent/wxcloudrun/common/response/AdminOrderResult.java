@@ -19,5 +19,8 @@ public class AdminOrderResult implements Serializable {
     private String businessType;
     private String orderType;
     private String mobile;
+    private String title;
+    private Integer fee;
+    private String category;
     private Date created;
 }

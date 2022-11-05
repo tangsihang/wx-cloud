@@ -3,15 +3,8 @@ package com.tencent.wxcloudrun.web.controller.admin;
 
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
-import com.tencent.wxcloudrun.common.request.BasePageParam;
-import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
-import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
-import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
-import com.tencent.wxcloudrun.common.response.Result;
-import com.tencent.wxcloudrun.common.response.UserInfoResult;
-import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
+import com.tencent.wxcloudrun.common.request.*;
+import com.tencent.wxcloudrun.common.response.*;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +40,7 @@ public class AdminUserInfoController {
     @ApiOperation("用户后台-分页")
     @PostMapping("/v1/user/page")
     @ApiRequest
-    public Result<PageDTO<UserInfoResult>> wxUserPage(@RequestBody @Validated BasePageParam param) {
+    public Result<PageDTO<UserInfoResult>> wxUserPage(@RequestBody @Validated AdminUserPageParam param) {
         PageDTO<UserInfoResult> result = adminUserInfoService.page(param);
         return Result.Success(result);
     }
@@ -64,16 +57,14 @@ public class AdminUserInfoController {
     @PostMapping("/v1/user/invite-pay-detail")
     @ApiRequest
     public Result<List<InvitePayDetailResult>> invitePayDetail(@RequestBody @Validated BaseInviteCodeParam param) {
-        List<InvitePayDetailResult> list = adminUserInfoService.invitePayDetail(param);
-        return Result.Success(list);
+        return Result.Success(adminUserInfoService.invitePayDetail(param));
     }
 
     @ApiOperation("用户后台-个人下单详情")
     @PostMapping("/v1/user/user-pay-detail")
     @ApiRequest
-    public Result<List<AdsOrderEntity>> userPayDetail(@RequestBody @Validated BaseWxUserParam param) {
-        List<AdsOrderEntity> list = adminUserInfoService.userPayDetail(param);
-        return Result.Success(list);
+    public Result<List<UserPayDetailResult>> userPayDetail(@RequestBody @Validated BaseWxUserParam param) {
+        return Result.Success(adminUserInfoService.userPayDetail(param));
     }
 
 

@@ -83,6 +83,10 @@ public class AdsInfoServiceImpl implements AdsInfoService {
         reqJson.put("container", container);
         WxEventEnum event = WxEventEnum.UNIFIED_ORDER;
         JSONObject respJson = wxClient.prePay(reqJson);
+        //预付款下单状态
+
+
+
         saveOrderLog(reqJson, respJson, event);
         return respJson;
     }

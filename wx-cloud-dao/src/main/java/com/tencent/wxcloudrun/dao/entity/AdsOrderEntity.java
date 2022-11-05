@@ -15,6 +15,8 @@ public class AdsOrderEntity extends BaseDO {
     private String outTradeNo;
     private Integer amount;
     private String currency;
+    private String mid;
+    private String status;
     private String businessType;
     private String orderType;
     private String resp;

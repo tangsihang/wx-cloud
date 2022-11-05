@@ -13,6 +13,7 @@ import java.util.Date;
 public class InviteUserDetailResult implements Serializable {
 
     private String openid;
+    private String nickname;
     private String inviteCode;
     private String inviteOpenid;
     private String inviteUserMobile;

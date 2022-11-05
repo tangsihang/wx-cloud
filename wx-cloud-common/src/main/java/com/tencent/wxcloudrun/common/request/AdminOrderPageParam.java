@@ -1,6 +1,9 @@
 package com.tencent.wxcloudrun.common.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -10,7 +13,14 @@ import java.io.Serializable;
  * @date 2022/11/04
  */
 @Data
-public class BasePageParam implements Serializable {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class AdminOrderPageParam extends BasePageParam implements Serializable {
+
+    private String outTradeNo;
+
+    private String status;
 
     @NotNull(message = "起始页不能为空")
     private Integer pageNo;

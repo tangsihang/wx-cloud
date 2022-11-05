@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.web.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
@@ -7,27 +8,20 @@ import com.google.common.collect.Maps;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
-import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
-import com.tencent.wxcloudrun.common.request.BasePageParam;
-import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
+import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
-import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
-import com.tencent.wxcloudrun.dao.entity.UserEntity;
-import com.tencent.wxcloudrun.dao.entity.UserInviteCodeEntity;
-import com.tencent.wxcloudrun.dao.entity.UserInviteRelateEntity;
-import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
-import com.tencent.wxcloudrun.dao.repository.UserInviteCodeRepository;
-import com.tencent.wxcloudrun.dao.repository.UserInviteRelateRepository;
-import com.tencent.wxcloudrun.dao.repository.UserRepository;
+import com.tencent.wxcloudrun.common.response.UserPayDetailResult;
+import com.tencent.wxcloudrun.dao.entity.*;
+import com.tencent.wxcloudrun.dao.repository.*;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -50,6 +44,8 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     private UserRepository userRepository;
     @Autowired
     private AdsOrderRepository adsOrderRepository;
+    @Autowired
+    private AdsInfoRepository adsInfoRepository;
     @Autowired
     private UserInviteCodeRepository codeRepository;
     @Autowired
@@ -76,9 +72,16 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     }
 
     @Override
-    public PageDTO<UserInfoResult> page(BasePageParam param) {
+    public PageDTO<UserInfoResult> page(AdminUserPageParam param) {
         IPage<UserEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
-        IPage<UserEntity> record = userRepository.page(page);
+        LambdaQueryWrapper<UserEntity> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.hasLength(param.getMobile())) {
+            queryWrapper.like(UserEntity::getMobile, param.getMobile());
+        }
+        if (StringUtils.hasLength(param.getNickname())) {
+            queryWrapper.like(UserEntity::getNickname, param.getNickname());
+        }
+        IPage<UserEntity> record = userRepository.page(page, queryWrapper);
         if (record.getTotal() == 0) {
             return new PageDTO<>();
         }
@@ -104,6 +107,7 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
             if (userEntity == null) {
                 return;
             }
+            result.setNickname(userEntity.getNickname());
             result.setInviteUserMobile(userEntity.getMobile());
             resultList.add(result);
         });
@@ -120,22 +124,59 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         List<InvitePayDetailResult> resultList = Lists.newArrayList();
         //遍历邀请人列表
         inviteRelateList.forEach(it -> {
-            InvitePayDetailResult result = new InvitePayDetailResult();
+
             String inviteOpenid = it.getInviteOpenid();
-            //通过被邀请人 查出 对应支付订单.
+            //先查出被邀请的人.
             UserEntity userEntity = userRepository.getOneByOpenId(inviteOpenid);
             if (userEntity == null) {
                 return;
             }
-            resultList.add(result);
+            List<AdsOrderEntity> adsOrderEntityList = adsOrderRepository.queryByOpenId(inviteOpenid);
+            if (CollectionUtils.isEmpty(adsOrderEntityList)) {
+                return;
+            }
+            adsOrderEntityList.forEach(order -> {
+                InvitePayDetailResult result = new InvitePayDetailResult();
+                //先查出被邀请的人.
+                result.setOpenid(userEntity.getOpenid());
+                result.setNickname(userEntity.getNickname());
+                result.setMobile(userEntity.getMobile());
+                result.setOutTradeNo(order.getOutTradeNo());
+                AdsInfoEntity adsInfoEntity = adsInfoRepository.getById(order.getMid());
+                if (adsInfoEntity == null) {
+                    return;
+                }
+                result.setTitle(adsInfoEntity.getTitle());
+                result.setCategory(adsInfoEntity.getCategory());
+                result.setFee(adsInfoEntity.getFee());
+                result.setCreated(order.getCreated());
+                result.setAdsId(adsInfoEntity.getId());
+                resultList.add(result);
+            });
         });
-        return null;
+        return resultList;
     }
 
 
     @Override
-    public List<AdsOrderEntity> userPayDetail(BaseWxUserParam param) {
-        return null;
+    public List<UserPayDetailResult> userPayDetail(BaseWxUserParam param) {
+        String openid = param.getOpenid();
+        List<AdsOrderEntity> orderList = adsOrderRepository.queryByOpenId(openid);
+        List<UserPayDetailResult> resultList = Lists.newArrayList();
+        orderList.forEach(it -> {
+            UserPayDetailResult result = new UserPayDetailResult();
+            AdsInfoEntity adsInfoEntity = adsInfoRepository.getById(it.getMid());
+            if (adsInfoEntity == null) {
+                return;
+            }
+            result.setAdsId(adsInfoEntity.getId());
+            result.setCategory(adsInfoEntity.getCategory());
+            result.setTitle(adsInfoEntity.getTitle());
+            result.setFee(adsInfoEntity.getFee());
+            result.setCreated(it.getCreated());
+            resultList.add(result);
+        });
+        return resultList;
     }
 
 
@@ -150,18 +191,21 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
         result.setOpenid(userEntity.getOpenid());
         result.setAvatarUrl(userEntity.getAvatarUrl());
         result.setMobile(userEntity.getMobile());
+        result.setNickname(userEntity.getNickname());
+        List<AdsOrderEntity> adsOrderEntityList = adsOrderRepository.queryByOpenId(openid);
+        result.setOrderPayNum(adsOrderEntityList.size());
+        result.setCreated(userEntity.getCreated());
         UserInviteCodeEntity inviteCodeEntity = codeRepository.getOneByOpenId(openid);
         //若用户存在邀请码
         if (inviteCodeEntity != null) {
             result.setInviteCode(inviteCodeEntity.getInviteCode());
-            List<AdsOrderEntity> adsOrderEntityList = adsOrderRepository.queryByOpenId(openid);
-            result.setInviteOrderPayNum(adsOrderEntityList.size());
             List<UserEntity> inviteUserList = userRepository.queryByInviteCode(inviteCodeEntity.getInviteCode());
             if (!CollectionUtils.isEmpty(inviteUserList)) {
                 //要求人数 去重
                 inviteUserList = inviteUserList.stream().filter(distinctByKey(UserEntity::getOpenid)).collect(Collectors.toList());
                 List<String> inviteUserOpenIdList = inviteUserList.stream().map(UserEntity::getOpenid).collect(Collectors.toList());
                 List<AdsOrderEntity> payOrderList = adsOrderRepository.queryByOpenIdList(inviteUserOpenIdList);
+                payOrderList = payOrderList.stream().filter(distinctByKey(AdsOrderEntity::getOpenid)).collect(Collectors.toList());
                 result.setInviteNum(inviteUserList.size());
                 result.setInviteOrderPayNum(payOrderList.size());
             } else {
