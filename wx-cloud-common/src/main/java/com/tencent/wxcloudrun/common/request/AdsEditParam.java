@@ -23,6 +23,7 @@ public class AdsEditParam {
     private Integer fee;
     private String content;
     private String category;
+    private Integer virtualNum;
 
     public void checkParam() {
         Assert.warnNotEmpty(getId(), "广告id不能为空");

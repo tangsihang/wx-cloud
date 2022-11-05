@@ -22,6 +22,7 @@ public class AdsCreateParam {
     private Integer fee;
     private String content;
     private String category;
+    private Integer virtualNum;
 
     public void checkParam() {
         Assert.warnNotEmpty(getTitle(), "广告标题不能为空");

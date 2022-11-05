@@ -2,15 +2,13 @@ package com.tencent.wxcloudrun;
 
 import com.alibaba.fastjson.JSON;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.request.AdminOrderPageParam;
-import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.AdminUserPageParam;
-import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
+import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.common.response.AdminOrderResult;
 import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.web.WxCloudRunApplication;
+import com.tencent.wxcloudrun.web.service.AdminAdsInfoService;
 import com.tencent.wxcloudrun.web.service.AdminOrderInfoService;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +33,8 @@ public class AdminTest {
     private AdminUserInfoService adminUserInfoService;
     @Autowired
     private AdminOrderInfoService adminOrderInfoService;
+    @Autowired
+    private AdminAdsInfoService adminAdsInfoService;
 
 
     @Test
@@ -81,4 +81,13 @@ public class AdminTest {
         List<InvitePayDetailResult> result = adminUserInfoService.invitePayDetail(param);
         log.info("{}", JSON.toJSONString(result));
     }
+
+    @Test
+    public void test_update_status() {
+        AdsEditParam param = new AdsEditParam();
+        param.setId(16);
+        param.setVirtualNum(1222);
+        adminAdsInfoService.edit(param);
+    }
+
 }

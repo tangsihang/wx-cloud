@@ -66,7 +66,7 @@ public class AdminAdsInfoController {
     @ApiOperation("广告后台-创建")
     @PostMapping("/v1/ads/create")
     @ApiRequest
-    public Result<Void> edit(@RequestBody @Validated AdsCreateParam param) {
+    public Result<Void> create(@RequestBody @Validated AdsCreateParam param) {
         adsInfoService.create(param);
         return Result.Success();
     }
