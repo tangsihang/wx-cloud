@@ -25,4 +25,10 @@ public class AdsOrderRepository extends BaseRepository<AdsOrderMapper, AdsOrderE
         wrapper.in(AdsOrderEntity::getOpenid, openidList);
         return this.list(wrapper);
     }
+
+    public List<AdsOrderEntity> queryByOpenId(String openid) {
+        LambdaQueryWrapper<AdsOrderEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AdsOrderEntity::getOpenid, openid);
+        return this.list(wrapper);
+    }
 }

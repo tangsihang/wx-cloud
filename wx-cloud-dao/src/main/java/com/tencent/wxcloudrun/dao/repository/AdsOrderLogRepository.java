@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class AdsOrderLogRepository extends BaseRepository<AdsOrderLogMapper, AdsOrderLogEntity> {
+
+
 }

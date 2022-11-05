@@ -10,6 +10,7 @@ import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
 import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
 import com.tencent.wxcloudrun.common.request.BasePageParam;
+import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
 import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
@@ -25,12 +26,15 @@ import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -108,8 +112,32 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
 
     @Override
     public List<InvitePayDetailResult> invitePayDetail(BaseInviteCodeParam param) {
+        String inviteCode = param.getInviteCode();
+        List<UserInviteRelateEntity> inviteRelateList = relateRepository.queryByInviteCode(inviteCode);
+        if (CollectionUtils.isEmpty(inviteRelateList)) {
+            return Lists.newArrayList();
+        }
+        List<InvitePayDetailResult> resultList = Lists.newArrayList();
+        //遍历邀请人列表
+        inviteRelateList.forEach(it -> {
+            InvitePayDetailResult result = new InvitePayDetailResult();
+            String inviteOpenid = it.getInviteOpenid();
+            //通过被邀请人 查出 对应支付订单.
+            UserEntity userEntity = userRepository.getOneByOpenId(inviteOpenid);
+            if (userEntity == null) {
+                return;
+            }
+            resultList.add(result);
+        });
         return null;
     }
+
+
+    @Override
+    public List<AdsOrderEntity> userPayDetail(BaseWxUserParam param) {
+        return null;
+    }
+
 
     private List<UserInfoResult> transferRecordForPage(IPage<UserEntity> record) {
         return record.getRecords().stream().map(this::buildUserInfoResult).collect(Collectors.toList());
@@ -118,21 +146,34 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     private UserInfoResult buildUserInfoResult(UserEntity userEntity) {
         String openid = userEntity.getOpenid();
         UserInfoResult result = new UserInfoResult();
-        BeanUtils.copyProperties(userEntity, result);
+
+        result.setOpenid(userEntity.getOpenid());
+        result.setAvatarUrl(userEntity.getAvatarUrl());
+        result.setMobile(userEntity.getMobile());
         UserInviteCodeEntity inviteCodeEntity = codeRepository.getOneByOpenId(openid);
         //若用户存在邀请码
         if (inviteCodeEntity != null) {
+            result.setInviteCode(inviteCodeEntity.getInviteCode());
+            List<AdsOrderEntity> adsOrderEntityList = adsOrderRepository.queryByOpenId(openid);
+            result.setInviteOrderPayNum(adsOrderEntityList.size());
             List<UserEntity> inviteUserList = userRepository.queryByInviteCode(inviteCodeEntity.getInviteCode());
             if (!CollectionUtils.isEmpty(inviteUserList)) {
+                //要求人数 去重
+                inviteUserList = inviteUserList.stream().filter(distinctByKey(UserEntity::getOpenid)).collect(Collectors.toList());
                 List<String> inviteUserOpenIdList = inviteUserList.stream().map(UserEntity::getOpenid).collect(Collectors.toList());
                 List<AdsOrderEntity> payOrderList = adsOrderRepository.queryByOpenIdList(inviteUserOpenIdList);
                 result.setInviteNum(inviteUserList.size());
-                result.setOrderPayNum(payOrderList.size());
+                result.setInviteOrderPayNum(payOrderList.size());
             } else {
                 result.setInviteNum(0);
-                result.setOrderPayNum(0);
+                result.setInviteOrderPayNum(0);
             }
         }
         return result;
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> set = ConcurrentHashMap.newKeySet();
+        return t -> set.add(keyExtractor.apply(t));
     }
 }

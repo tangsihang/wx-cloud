@@ -13,4 +13,11 @@ import java.util.Date;
 public class InvitePayDetailResult implements Serializable {
 
     private String openid;
+    private String mobile;
+    private String nickname;
+    private String outTradeNo;
+    private String title;
+    private String category;
+    private String fee;
+    private Date created;
 }

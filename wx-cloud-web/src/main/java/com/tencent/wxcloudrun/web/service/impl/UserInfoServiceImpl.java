@@ -186,7 +186,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 List<String> inviteUserOpenIdList = inviteUserList.stream().map(UserEntity::getOpenid).collect(Collectors.toList());
                 List<AdsOrderEntity> payOrderList = adsOrderRepository.queryByOpenIdList(inviteUserOpenIdList);
                 result.setInviteNum(inviteUserList.size());
-                result.setOrderPayNum(payOrderList.size());
+                result.setInviteOrderPayNum(payOrderList.size());
             }
         }
         return result;

@@ -25,6 +25,7 @@ public class UserInfoResult implements Serializable {
     private String inviteCode;
     //邀请人数
     private Integer inviteNum;
+    private Integer inviteOrderPayNum;
     private Integer orderPayNum;
 
 }
