@@ -15,10 +15,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author tangsh
@@ -79,7 +81,7 @@ public class AdminAdsInfoController {
         return Result.Success();
     }
 
-    @ApiOperation("广告后台-编辑")
+    @ApiOperation("广告后台-编辑虚拟用户数")
     @PostMapping("/v1/ads/edit-virtual-num")
     @ApiRequest
     public Result<Void> updateVirtualNum(@RequestBody @Validated AdsVirtualNumEditParam param) {
@@ -103,16 +105,4 @@ public class AdminAdsInfoController {
         List<InviteUserDetailResult> list = adsInfoService.payUserDetail(param);
         return Result.Success(list);
     }
-
-    @ApiOperation("广告后台-test请求头")
-    @PostMapping("/v1/ads/test")
-    @ApiRequest
-    public Result<Void> test(@RequestHeader Map<String, String> headers) {
-        headers.forEach((key, value) -> {
-            // 日志中输出所有请求头
-            log.info(String.format("Header '%s' = %s", key, value));
-        });
-        return Result.Success();
-    }
-
 }

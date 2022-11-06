@@ -11,7 +11,10 @@ import com.tencent.wxcloudrun.common.dto.Container;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
-import com.tencent.wxcloudrun.common.request.*;
+import com.tencent.wxcloudrun.common.request.AdsPageParam;
+import com.tencent.wxcloudrun.common.request.BaseAdsParam;
+import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
+import com.tencent.wxcloudrun.common.request.WxPrePayParam;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderLogEntity;
@@ -84,12 +87,22 @@ public class AdsInfoServiceImpl implements AdsInfoService {
         WxEventEnum event = WxEventEnum.UNIFIED_ORDER;
         JSONObject respJson = wxClient.prePay(reqJson);
         //预付款下单状态
-
-
-
+        buildPayOrder(reqJson, openid, outTradeNo, param.getTotal_fee());
         saveOrderLog(reqJson, respJson, event);
         return respJson;
     }
+
+    private void buildPayOrder(JSONObject req, String openid, String outTradeNo, Integer totalFee) {
+        AdsOrderEntity order = new AdsOrderEntity();
+        order.setOpenid(openid);
+        order.setOutTradeNo(outTradeNo);
+        order.setAmount(totalFee);
+        order.setOrderType("PAY");
+        order.setBusinessType("ADS");
+        order.setResp(req.toJSONString());
+        adsOrderRepository.save(order);
+    }
+
 
     @Override
     public JSONObject refund(String openid, BaseOrderNoParam param) {

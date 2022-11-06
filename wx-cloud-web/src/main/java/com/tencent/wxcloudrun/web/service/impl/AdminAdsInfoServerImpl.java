@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.tencent.wxcloudrun.common.constants.AdsStatusEnum;
+import com.tencent.wxcloudrun.common.constants.AppConstant;
 import com.tencent.wxcloudrun.common.constants.CategoryEnum;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
@@ -27,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -42,9 +42,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
 
-    @Value("${wx.env.id:prod-9ge6u8sn7684a421}")
-    public String WX_ENV_ID;
-
     @Autowired
     private AdsInfoRepository adsInfoRepository;
     @Autowired
@@ -56,6 +53,12 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
 
     @Override
     public PageDTO<AdsPageInfoResult> page(AdsPageParam param) {
+        IPage<AdsInfoEntity> record = conditionQuery(param);
+        List<AdsPageInfoResult> resultList = transferRecordForPage(record);
+        return PageUtils.copyWithRecords(record, resultList);
+    }
+
+    private IPage<AdsInfoEntity> conditionQuery(AdsPageParam param){
         IPage<AdsInfoEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasLength(param.getCategory())) {
@@ -65,11 +68,9 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         if (StringUtils.hasLength(param.getTitle())) {
             queryWrapper.like(AdsInfoEntity::getTitle, param.getTitle());
         }
-        IPage<AdsInfoEntity> record = adsInfoRepository.page(page, queryWrapper);
-
-        List<AdsPageInfoResult> resultList = transferRecordForPage(record);
-        return PageUtils.copyWithRecords(record, resultList);
+        return adsInfoRepository.page(page, queryWrapper);
     }
+
 
     private List<AdsPageInfoResult> transferRecordForPage(IPage<AdsInfoEntity> record) {
         return record.getRecords().stream().map(this::buildAdsInfoResult).collect(Collectors.toList());
@@ -146,7 +147,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     @Override
     public JSONObject upload(UploadParam param) {
         JSONObject reqJson = new JSONObject();
-        reqJson.put("env", WX_ENV_ID);
+        reqJson.put("env", AppConstant.WX_ENV_ID);
         reqJson.put("path", param.getPath());
         return wxFileClient.upload(reqJson);
     }

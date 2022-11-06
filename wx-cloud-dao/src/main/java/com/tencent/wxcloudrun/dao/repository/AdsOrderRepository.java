@@ -17,7 +17,6 @@ public class AdsOrderRepository extends BaseRepository<AdsOrderMapper, AdsOrderE
     public AdsOrderEntity getOneByOrderNo(String outTradeNo) {
         LambdaQueryWrapper<AdsOrderEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AdsOrderEntity::getOutTradeNo, outTradeNo);
-        wrapper.eq(AdsOrderEntity::getStatus, "SUCCESS");
         return this.getOne(wrapper);
     }
 

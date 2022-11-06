@@ -18,5 +18,8 @@ public enum WxEventEnum {
 
     CLOSE_ORDER,
 
-    REFUND_ORDER
+    REFUND_ORDER,
+
+    CREATE_ORDER_WEBHOOK
+    ,
 }

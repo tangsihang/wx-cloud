@@ -3,7 +3,10 @@ package com.tencent.wxcloudrun.web.controller.admin;
 
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.request.*;
+import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
+import com.tencent.wxcloudrun.common.request.AdminUserPageParam;
+import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
+import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
 import com.tencent.wxcloudrun.common.response.*;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import io.swagger.annotations.Api;
@@ -36,6 +39,15 @@ public class AdminUserInfoController {
         adminUserInfoService.login(param);
         return Result.Success();
     }
+
+    @ApiOperation("用户后台-是否登录")
+    @PostMapping("/v1/login-check")
+    @ApiRequest
+    public Result<Void> loginCheck(@RequestBody @Validated AdminUserLoginParam param) {
+        adminUserInfoService.login(param);
+        return Result.Success();
+    }
+
 
     @ApiOperation("用户后台-分页")
     @PostMapping("/v1/user/page")
