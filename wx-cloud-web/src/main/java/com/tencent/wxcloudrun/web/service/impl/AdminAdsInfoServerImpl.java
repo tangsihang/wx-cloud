@@ -23,9 +23,11 @@ import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
 import com.tencent.wxcloudrun.dao.repository.UserRepository;
 import com.tencent.wxcloudrun.web.client.WxFileClient;
 import com.tencent.wxcloudrun.web.service.AdminAdsInfoService;
+import com.tencent.wxcloudrun.web.utils.ExcelUtils;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         return PageUtils.copyWithRecords(record, resultList);
     }
 
-    private IPage<AdsInfoEntity> conditionQuery(AdsPageParam param){
+    private IPage<AdsInfoEntity> conditionQuery(AdsPageParam param) {
         IPage<AdsInfoEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasLength(param.getCategory())) {
@@ -117,6 +119,29 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         AdsInfoEntity update = new AdsInfoEntity();
         BeanUtils.copyProperties(param, update);
         adsInfoRepository.updateById(update);
+    }
+
+    @Override
+    public HSSFWorkbook export(AdsPageParam param) {
+        PageDTO<AdsPageInfoResult> pageResult = page(param);
+        return parseExcel(pageResult.getRecords());
+    }
+
+    private HSSFWorkbook parseExcel(List<AdsPageInfoResult> resultList) {
+        String[][] content = new String[resultList.size()][];
+        for (int i = 0; i < resultList.size(); i++) {
+            content[i] = new String[AppConstant.ADMIN_ADS_EXPORT_TITLE.length];
+            AdsPageInfoResult data = resultList.get(i);
+            content[i][0] = String.valueOf(data.getId());
+            content[i][1] = data.getTitle();
+            content[i][2] = data.getDes();
+            content[i][3] = String.valueOf(data.getFee());
+            content[i][4] = data.getCategory();
+            content[i][5] = data.getStatus();
+            content[i][6] = String.valueOf(data.getPayNum());
+            content[i][7] = String.valueOf(data.getVirtualNum());
+        }
+        return ExcelUtils.getHSSFWorkbook(AppConstant.ADMIN_ADS_EXPORT_TITLE, content);
     }
 
     @Override

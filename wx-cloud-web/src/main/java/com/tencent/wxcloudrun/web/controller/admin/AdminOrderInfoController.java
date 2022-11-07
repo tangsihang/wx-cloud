@@ -47,23 +47,6 @@ public class AdminOrderInfoController {
         return Result.Success(orderInfoService.page(param));
     }
 
-    @ApiOperation("订单查询-详情")
-    @PostMapping("/v1/order/detail")
-    @ApiRequest
-    public Result<JSONObject> detail(@RequestBody @Validated BaseOrderNoParam param) {
-        JSONObject respJson = orderInfoService.detail(param);
-        return Result.Success(respJson);
-    }
-
-    @ApiOperation("订单查询-关联用户")
-    @PostMapping("/v1/order/link-user-info")
-    @ApiRequest
-    public Result<UserInfoResult> linUserInfo(@RequestBody @Validated BaseWxUserParam param) {
-        UserInfoResult result = orderInfoService.linkUserInfo(param);
-        return Result.Success(result);
-    }
-
-
     @ApiOperation("订单查询-导出")
     @PostMapping("/v1/order/export")
     public void export(@RequestBody @Validated AdminOrderPageParam param, HttpServletResponse response) {
@@ -81,4 +64,19 @@ public class AdminOrderInfoController {
         }
     }
 
+    @ApiOperation("订单查询-详情")
+    @PostMapping("/v1/order/detail")
+    @ApiRequest
+    public Result<JSONObject> detail(@RequestBody @Validated BaseOrderNoParam param) {
+        JSONObject respJson = orderInfoService.detail(param);
+        return Result.Success(respJson);
+    }
+
+    @ApiOperation("订单查询-关联用户")
+    @PostMapping("/v1/order/link-user-info")
+    @ApiRequest
+    public Result<UserInfoResult> linUserInfo(@RequestBody @Validated BaseWxUserParam param) {
+        UserInfoResult result = orderInfoService.linkUserInfo(param);
+        return Result.Success(result);
+    }
 }

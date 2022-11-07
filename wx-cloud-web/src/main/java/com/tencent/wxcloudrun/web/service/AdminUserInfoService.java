@@ -6,6 +6,7 @@ import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.common.response.UserPayDetailResult;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.List;
 
@@ -25,4 +26,5 @@ public interface AdminUserInfoService {
 
     List<UserPayDetailResult> userPayDetail(BaseWxUserParam param);
 
+    HSSFWorkbook export(AdminUserPageParam param);
 }

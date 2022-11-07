@@ -5,10 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.tencent.wxcloudrun.common.constants.AppConstant;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
-import com.tencent.wxcloudrun.common.request.*;
+import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
+import com.tencent.wxcloudrun.common.request.AdminUserPageParam;
+import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
+import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
 import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
@@ -16,9 +20,11 @@ import com.tencent.wxcloudrun.common.response.UserPayDetailResult;
 import com.tencent.wxcloudrun.dao.entity.*;
 import com.tencent.wxcloudrun.dao.repository.*;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
+import com.tencent.wxcloudrun.web.utils.ExcelUtils;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -177,6 +183,29 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
             resultList.add(result);
         });
         return resultList;
+    }
+
+    @Override
+    public HSSFWorkbook export(AdminUserPageParam param) {
+        PageDTO<UserInfoResult> pageResult = page(param);
+        return parseExcel(pageResult.getRecords());
+    }
+
+    private HSSFWorkbook parseExcel(List<UserInfoResult> resultList) {
+        String[][] content = new String[resultList.size()][];
+        for (int i = 0; i < resultList.size(); i++) {
+            content[i] = new String[AppConstant.ADMIN_USER_EXPORT_TITLE.length];
+            UserInfoResult data = resultList.get(i);
+            content[i][0] = data.getOpenid();
+            content[i][1] = data.getNickname();
+            content[i][2] = data.getMobile();
+            content[i][3] = data.getInviteCode();
+            content[i][4] = String.valueOf(data.getInviteNum());
+            content[i][5] = String.valueOf(data.getInviteOrderPayNum());
+            content[i][6] = String.valueOf(data.getOrderPayNum());
+            content[i][7] = String.valueOf(data.getCreated());
+        }
+        return ExcelUtils.getHSSFWorkbook(AppConstant.ADMIN_USER_EXPORT_TITLE, content);
     }
 
 

@@ -15,6 +15,7 @@ public class AdsPageInfoResult implements Serializable {
     private String title;
     private String des;
     private String img;
+    private String video;
     private Integer fee;
     private String content;
     private String category;

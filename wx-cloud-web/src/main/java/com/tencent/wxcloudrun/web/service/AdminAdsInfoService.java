@@ -6,6 +6,7 @@ import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.common.response.AdsPageInfoResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.List;
 
@@ -32,5 +33,7 @@ public interface AdminAdsInfoService {
     List<InviteUserDetailResult> payUserDetail(BaseAdsParam param);
 
     void updateVirtualNum(AdsVirtualNumEditParam param);
+
+    HSSFWorkbook export(AdsPageParam param);
 
 }
