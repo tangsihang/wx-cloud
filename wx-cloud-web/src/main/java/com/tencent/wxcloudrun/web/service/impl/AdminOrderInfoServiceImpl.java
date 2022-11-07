@@ -19,8 +19,10 @@ import com.tencent.wxcloudrun.dao.repository.AdsInfoRepository;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
 import com.tencent.wxcloudrun.dao.repository.UserRepository;
 import com.tencent.wxcloudrun.web.service.AdminOrderInfoService;
+import com.tencent.wxcloudrun.web.utils.ExcelUtils;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,10 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
     private UserRepository userRepository;
     @Autowired
     private AdsInfoRepository adsInfoRepository;
+
+    private static final String[] download_export_title = {"openid", "交易单号", "金额", "币种", "状态", "手机号", "广告标题", "广告类目"};
+
+    private static final String sheet_name = "工作表1";
 
     @Override
     public PageDTO<AdminOrderResult> page(AdminOrderPageParam param) {
@@ -79,6 +85,29 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
         UserInfoResult result = new UserInfoResult();
         BeanUtils.copyProperties(userEntity, result);
         return result;
+    }
+
+    @Override
+    public HSSFWorkbook export(AdminOrderPageParam param) {
+        PageDTO<AdminOrderResult> pageResult = page(param);
+        return parseExcel(pageResult.getRecords());
+    }
+
+    private HSSFWorkbook parseExcel(List<AdminOrderResult> resultList) {
+        String[][] content = new String[resultList.size()][];
+        for (int i = 0; i < resultList.size(); i++) {
+            content[i] = new String[download_export_title.length];
+            AdminOrderResult data = resultList.get(i);
+            content[i][0] = data.getOpenid();
+            content[i][1] = data.getOutTradeNo();
+            content[i][2] = String.valueOf(data.getAmount());
+            content[i][3] = data.getCurrency();
+            content[i][4] = data.getStatus();
+            content[i][5] = data.getMobile();
+            content[i][6] = data.getTitle();
+            content[i][7] = data.getCategory();
+        }
+        return ExcelUtils.getHSSFWorkbook(sheet_name, download_export_title, content);
     }
 
     private List<AdminOrderResult> transferRecordForPage(IPage<AdsOrderEntity> record) {

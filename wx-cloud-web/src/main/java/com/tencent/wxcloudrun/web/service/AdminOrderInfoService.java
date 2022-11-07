@@ -9,6 +9,7 @@ import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
 import com.tencent.wxcloudrun.common.response.AdminOrderResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 /**
  * @author tangsh
@@ -21,4 +22,8 @@ public interface AdminOrderInfoService {
     JSONObject detail(BaseOrderNoParam param);
 
     UserInfoResult linkUserInfo(BaseWxUserParam param);
+
+    HSSFWorkbook export(AdminOrderPageParam param);
+
+
 }
