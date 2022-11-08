@@ -78,8 +78,23 @@ public class WxTest {
         String msg = "{\"cashFee\":1,\"timeEnd\":\"20221108205826\",\"mchId\":\"1800008281\",\"openid\":\"oPoo441ctvw8R0EwYeM8oT0bVNbo\",\"bankType\":\"OTHERS\",\"resultCode\":\"SUCCESS\",\"subMchId\":\"1633796573\",\"feeType\":\"CNY\",\"isSubscribe\":\"N\",\"nonceStr\":\"49ec14a692469297\",\"transactionId\":\"4200001612202211085435844559\",\"returnCode\":\"SUCCESS\",\"totalFee\":1,\"appid\":\"wxd2d16a504f24665e\",\"subOpenid\":\"oXPeb4gGUWuARbGkIcvrb3PXTb30\",\"outTradeNo\":\"PAY_670Lkxk11eec\",\"subIsSubscribe\":\"N\",\"tradeType\":\"JSAPI\",\"subAppid\":\"wx180962a99caf9ff5\"}";
         JSONObject req = JSONObject.parseObject(msg);
         webhookService.respWxPayHook(req);
-
     }
+
+    @Test
+    public void test_wx_login() {
+        String msg = "{\n" +
+                "\t\"code\": \"051vgFFa1JekdE0Bw2Ja1nYIbx3vgFF0\",\n" +
+                "\t\"encryptedData\": \"fW8fOg9u9UUXg8qUW71aIRaGU/oSdL8XWeOhTLy9JQBut3qNyMvoasaz4JZ63ZMMqPy/i33GYMj9LIec9Qe2HNZl444mrFyM92muQ3rTvOx5U3Zf8JtqPx6LPLwF1pUk+1ewMC1SH2co3qHMjLBWq9UleW9po/pLotmrP6dpScBX2DMtVgX80lGIXAStFjj9yTebhdOQGWuH3LM/1oiJVpJ1GjGO5IkNSx1Fub6zGO7lFK5kRbjB4zZkAiIRA9ZHoLcBYiuxXcOqB2aRH7LzuSuyeQ+KAYOfvfdE+oXkk4n4CeAwtNWIG6pqjo0tPEMp996PqEswt1w/9QkbB6lAdVyBXXW5DZygFx7L6XYuLpPbkQVs0yRXj7fiho8JCGIfTILfd0tQkCqT3i02MqySuw==\",\n" +
+                "\t\"inviteCode\": \"5Exhfd\",\n" +
+                "\t\"iv\": \"69wuMWuwcyH2bw12sBTSwQ==\",\n" +
+                "\t\"rawData\": \"{\\\"nickName\\\":\\\"辰北\\\",\\\"gender\\\":0,\\\"language\\\":\\\"zh_CN\\\",\\\"city\\\":\\\"\\\",\\\"province\\\":\\\"\\\",\\\"country\\\":\\\"\\\",\\\"avatarUrl\\\":\\\"https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqW4PSlKibkNPn5TFCmFNISb6WAyWj0sLPJdMYv4h5icnBLwjWVHIW2V0f3KaGnoDuibiadtKEFeln57w/132\\\"}\",\n" +
+                "\t\"signature\": \"6edee41d683a53ec2818815a85d117ec194cd48e\"\n" +
+                "}";
+        UserLoginParam req = JSONObject.parseObject(msg, UserLoginParam.class);
+        String openid = "oXPeb4gGUWuARbGkIcvrb3PXTb30";
+        userInfoService.login(openid, req);
+    }
+
 
 }
 

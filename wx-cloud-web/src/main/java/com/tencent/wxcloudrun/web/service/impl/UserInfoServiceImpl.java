@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,31 +62,36 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserEntity insertOrUpdateDO = buildUserEntity(param, sessionKey, openid);
         JSONObject userInfo = new JSONObject();
         UserEntity user = userRepository.getOneByOpenId(openid);
-        //TODO,这块逻辑梳理下
+        //没有用户数据，新建
         if (user == null) {
-            insertOrUpdateDO.setToken(NonceUtil.createNonce(32));
-            UserInviteCodeEntity inviteCodeEntity = inviteCodeRepository.getOneByOpenId(openid);
-            if (inviteCodeEntity != null) {
-                if (inviteCodeEntity.getInviteCode().equals(inviteCode)) {
-                    log.info("自己邀请自己，玩呢！");
-                    insertOrUpdateDO.setInviteCode("");
-                } else {
-                    insertOrUpdateDO.setInviteCode(param.getInviteCode());
-                    createInviteRelate(inviteCode, openid);
-                }
+            if (StringUtils.hasLength(inviteCode)) {
+                handeWithInviteCode(insertOrUpdateDO, inviteCode);
             }
+            insertOrUpdateDO.setToken(NonceUtil.createNonce(32));
             userRepository.save(insertOrUpdateDO);
             userInfo.put("token", insertOrUpdateDO.getToken());
         } else {
+            //否则 更新
             userInfo.put("token", user.getToken());
             // 已存在，做已存在的处理，如更新用户的头像，昵称等，根据openID更新，这里代码自己写
             userRepository.updateByOpenId(insertOrUpdateDO);
-
             LambdaQueryWrapper<UserEntity> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(UserEntity::getOpenid, openid);
             userRepository.update(insertOrUpdateDO, wrapper);
         }
         return userInfo;
+    }
+
+
+    private void handeWithInviteCode(UserEntity insertOrUpdateDO, String inviteCode) {
+        //判断是否是自己的邀请码
+        UserInviteCodeEntity inviteCodeEntity = inviteCodeRepository.getOneByOpenId(insertOrUpdateDO.getOpenid());
+        if (inviteCodeEntity != null && inviteCodeEntity.getInviteCode().equals(inviteCode)) {
+            //是自己的要求码。直接过
+            return;
+        }
+        insertOrUpdateDO.setInviteCode(inviteCode);
+        createInviteRelate(inviteCode, insertOrUpdateDO.getOpenid());
     }
 
 

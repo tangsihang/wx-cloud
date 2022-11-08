@@ -11,4 +11,6 @@ public class ErrorCode {
     public static final Integer PARAM_ERROR = 40006;
 
     public static final Integer SHOULD_NEVER_HAPPEN = 50003;
+
+    public static final Integer TOKEN_EXPIRED = 50001;
 }
