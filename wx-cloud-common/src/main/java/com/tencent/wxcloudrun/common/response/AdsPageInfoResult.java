@@ -3,6 +3,7 @@ package com.tencent.wxcloudrun.common.response;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author tangsh
@@ -23,4 +24,6 @@ public class AdsPageInfoResult implements Serializable {
 
     private Integer payNum;
     private Integer virtualNum;
+    private Date startTime;
+    private Date endTime;
 }

@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+
 /**
  * @author tangsh
  * @date 2022/10/27
@@ -53,6 +55,7 @@ public class AdsInfoServiceImpl implements AdsInfoService {
         IPage<AdsInfoEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AdsInfoEntity::getStatus, "ON");
+        queryWrapper.ge(AdsInfoEntity::getEndTime, new Date());
         if (StringUtils.hasLength(param.getCategory())) {
             CategoryEnum categoryEnum = CategoryEnum.getByCode(param.getCategory());
             queryWrapper.eq(AdsInfoEntity::getCategory, categoryEnum.getCode());
