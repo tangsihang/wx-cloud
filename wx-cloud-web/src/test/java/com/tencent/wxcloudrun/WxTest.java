@@ -6,8 +6,8 @@ import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.AdsPageParam;
 import com.tencent.wxcloudrun.common.request.BasePageParam;
 import com.tencent.wxcloudrun.common.request.UserLoginParam;
+import com.tencent.wxcloudrun.common.response.AdminOrderResult;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
-import com.tencent.wxcloudrun.dao.entity.AdsOrderEntity;
 import com.tencent.wxcloudrun.web.WxCloudRunApplication;
 import com.tencent.wxcloudrun.web.service.AdsInfoService;
 import com.tencent.wxcloudrun.web.service.OrderInfoService;
@@ -53,11 +53,11 @@ public class WxTest {
     public void test_query_order_page() {
         int pageNo = 0;
         int pageSize = 2;
-        String openid = "oPoo441ctvw8R0EwYeM8oT0bVNbo";
+        String openid = "oXPeb4gGUWuARbGkIcvrb3PXTb30";
         BasePageParam param = new BasePageParam();
         param.setPageNo(pageNo);
         param.setPageSize(pageSize);
-        PageDTO<AdsOrderEntity> pageDTO = orderInfoService.page(openid, param);
+        PageDTO<AdminOrderResult> pageDTO = orderInfoService.page(openid, param);
         log.info("{}", JSON.toJSONString(pageDTO));
     }
 
