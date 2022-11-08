@@ -17,4 +17,6 @@ public class WxPrePayParam implements Serializable {
     @NotNull(message = "支付金额不能为空")
     @ApiModelProperty(value = "支付金额", required = true)
     private Integer total_fee;
+    @NotNull(message = "广告id不能为空")
+    private Integer adsId;
 }

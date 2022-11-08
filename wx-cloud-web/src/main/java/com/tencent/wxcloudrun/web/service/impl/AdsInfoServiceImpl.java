@@ -90,16 +90,17 @@ public class AdsInfoServiceImpl implements AdsInfoService {
         WxEventEnum event = WxEventEnum.UNIFIED_ORDER;
         JSONObject respJson = wxClient.prePay(reqJson);
         //预付款下单状态
-        buildPayOrder(reqJson, openid, outTradeNo, param.getTotal_fee());
+        buildPayOrder(reqJson, openid, outTradeNo, param);
         saveOrderLog(reqJson, respJson, event);
         return respJson;
     }
 
-    private void buildPayOrder(JSONObject req, String openid, String outTradeNo, Integer totalFee) {
+    private void buildPayOrder(JSONObject req, String openid, String outTradeNo, WxPrePayParam param) {
         AdsOrderEntity order = new AdsOrderEntity();
         order.setOpenid(openid);
         order.setOutTradeNo(outTradeNo);
-        order.setAmount(totalFee);
+        order.setMid(param.getAdsId());
+        order.setAmount(param.getTotal_fee());
         order.setOrderType("PAY");
         order.setBusinessType("ADS");
         order.setResp(req.toJSONString());
