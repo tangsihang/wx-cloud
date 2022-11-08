@@ -18,6 +18,5 @@ import java.io.Serializable;
 public class AdminOrderPageParam extends BasePageParam implements Serializable {
 
     private String outTradeNo;
-
     private String status;
 }

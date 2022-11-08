@@ -12,6 +12,5 @@ import java.io.Serializable;
 public class AdminUserPageParam extends BasePageParam implements Serializable {
 
     private String nickname;
-
     private String mobile;
 }

@@ -16,6 +16,5 @@ import lombok.NoArgsConstructor;
 public class AdsPageParam extends BasePageParam {
 
     private String title;
-
     private String category;
 }

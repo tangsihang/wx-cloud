@@ -24,11 +24,8 @@ public class UserInfoResult implements Serializable {
     private Integer gender;
     private String mobile;
     private String inviteCode;
-    //邀请人数
     private Integer inviteNum;
-    //邀请付费人数
     private Integer inviteOrderPayNum;
-    //已报名活动数据
     private Integer orderPayNum;
     private Date created;
 
