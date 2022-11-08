@@ -16,7 +16,7 @@ public class NonceUtil {
     public static String createNonce(int length) {
         char[] buf = new char[length];
 
-        for(int i = 0; i < length; ++i) {
+        for (int i = 0; i < length; ++i) {
             buf[i] = SYMBOLS[random.nextInt(SYMBOLS.length)];
         }
 

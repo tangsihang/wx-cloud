@@ -42,26 +42,15 @@ public class AdminUserInfoController {
     @ApiOperation("用户后台-登录")
     @PostMapping("/v1/login")
     @ApiRequest
-    public Result<Void> login(@RequestBody @Validated AdminUserLoginParam param) {
-        adminUserInfoService.login(param);
-        return Result.Success();
+    public Result<String> login(@RequestBody @Validated AdminUserLoginParam param) {
+        return Result.Success(adminUserInfoService.login(param));
     }
-
-    @ApiOperation("用户后台-是否登录")
-    @PostMapping("/v1/login-check")
-    @ApiRequest
-    public Result<Void> loginCheck(@RequestBody @Validated AdminUserLoginParam param) {
-        adminUserInfoService.login(param);
-        return Result.Success();
-    }
-
 
     @ApiOperation("用户后台-分页")
     @PostMapping("/v1/user/page")
     @ApiRequest
     public Result<PageDTO<UserInfoResult>> wxUserPage(@RequestBody @Validated AdminUserPageParam param) {
-        PageDTO<UserInfoResult> result = adminUserInfoService.page(param);
-        return Result.Success(result);
+        return Result.Success(adminUserInfoService.page(param));
     }
 
     @ApiOperation("用户后台-分页")

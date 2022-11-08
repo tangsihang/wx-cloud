@@ -64,6 +64,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             result.setCategory(adsInfoEntity.getCategory());
             result.setTitle(adsInfoEntity.getTitle());
             result.setFee(adsInfoEntity.getFee());
+            result.setImg(adsInfoEntity.getImg());
+            result.setVideo(adsInfoEntity.getVideo());
         }
         return result;
     }

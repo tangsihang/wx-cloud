@@ -21,7 +21,9 @@ import com.tencent.wxcloudrun.dao.entity.*;
 import com.tencent.wxcloudrun.dao.repository.*;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import com.tencent.wxcloudrun.web.utils.ExcelUtils;
+import com.tencent.wxcloudrun.web.utils.NonceUtil;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
+import com.tencent.wxcloudrun.web.utils.SignUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -66,11 +68,13 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     }
 
     @Override
-    public void login(AdminUserLoginParam param) {
+    public String login(AdminUserLoginParam param) {
         String username = param.getUsername();
         String password = param.getPassword();
         if (username.equals(admin_user_map.get("username")) && password.equals(admin_user_map.get("password"))) {
+            String token = SignUtils.sign(username, password);
             log.info("登录成功~");
+            return token;
         } else {
             log.error("登录失败~,账户密码不正确~ {},{}", username, password);
             throw new BizException(ErrorCode.BIZ_BREAK, "登录失败~,账户密码不正确!");

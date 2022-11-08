@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface AdminUserInfoService {
 
-    void login(AdminUserLoginParam param);
+    String login(AdminUserLoginParam param);
 
     PageDTO<UserInfoResult> page(AdminUserPageParam param);
 

@@ -21,6 +21,8 @@ public class AdminOrderResult implements Serializable {
     private String orderType;
     private Integer adsId;
     private String mobile;
+    private String img;
+    private String video;
     private String title;
     private Integer fee;
     private String category;
