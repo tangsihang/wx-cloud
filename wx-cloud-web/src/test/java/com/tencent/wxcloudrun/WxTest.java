@@ -12,6 +12,7 @@ import com.tencent.wxcloudrun.web.WxCloudRunApplication;
 import com.tencent.wxcloudrun.web.service.AdsInfoService;
 import com.tencent.wxcloudrun.web.service.OrderInfoService;
 import com.tencent.wxcloudrun.web.service.UserInfoService;
+import com.tencent.wxcloudrun.web.service.WebhookService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,8 @@ public class WxTest {
     private OrderInfoService orderInfoService;
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private WebhookService webhookService;
 
 
     @Test
@@ -69,6 +72,14 @@ public class WxTest {
         userInfoService.login(openid, param);
     }
 
+
+    @Test
+    public void test_pay_webhook_() {
+        String msg = "{\"cashFee\":1,\"timeEnd\":\"20221108205826\",\"mchId\":\"1800008281\",\"openid\":\"oPoo441ctvw8R0EwYeM8oT0bVNbo\",\"bankType\":\"OTHERS\",\"resultCode\":\"SUCCESS\",\"subMchId\":\"1633796573\",\"feeType\":\"CNY\",\"isSubscribe\":\"N\",\"nonceStr\":\"49ec14a692469297\",\"transactionId\":\"4200001612202211085435844559\",\"returnCode\":\"SUCCESS\",\"totalFee\":1,\"appid\":\"wxd2d16a504f24665e\",\"subOpenid\":\"oXPeb4gGUWuARbGkIcvrb3PXTb30\",\"outTradeNo\":\"PAY_670Lkxk11eec\",\"subIsSubscribe\":\"N\",\"tradeType\":\"JSAPI\",\"subAppid\":\"wx180962a99caf9ff5\"}";
+        JSONObject req = JSONObject.parseObject(msg);
+        webhookService.respWxPayHook(req);
+
+    }
 
 }
 

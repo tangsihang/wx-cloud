@@ -71,4 +71,18 @@ public class WxUtils {
         }
         return respJson;
     }
+
+    public static JSONObject respSuccess() {
+        JSONObject resp = new JSONObject();
+        resp.put("errcode", 0);
+        resp.put("errmsg", "OK");
+        return resp;
+    }
+
+    public static JSONObject respFail() {
+        JSONObject resp = new JSONObject();
+        resp.put("errcode", -1);
+        resp.put("errmsg", "ERROR");
+        return resp;
+    }
 }

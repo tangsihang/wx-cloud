@@ -10,6 +10,7 @@ import com.tencent.wxcloudrun.dao.entity.AdsOrderLogEntity;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderLogRepository;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
 import com.tencent.wxcloudrun.web.service.WebhookService;
+import com.tencent.wxcloudrun.web.utils.WxUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,13 +33,14 @@ public class WebhookServiceImpl implements WebhookService {
         log.info("微信下单-回调成功:{}", req.toJSONString());
         String outTradeNo = req.getString("outTradeNo");
         AdsOrderEntity orderEntity = adsOrderRepository.getOneByOrderNo(outTradeNo);
-        if (orderEntity != null) {
-            return respSuccess();
+        if (orderEntity == null) {
+            log.warn("原始订单号不存在!:{}", outTradeNo);
+            return WxUtils.respFail();
         }
         updatePayOrder(req, outTradeNo);
         WxEventEnum event = WxEventEnum.CREATE_ORDER_WEBHOOK;
         saveOrderLog(req, req, event);
-        return respSuccess();
+        return WxUtils.respSuccess();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class WebhookServiceImpl implements WebhookService {
         Integer totalFee = req.getInteger("totalFee");
         //新增退款单表
         buildRefundOrder(req, orderEntity.getOpenid(), outTradeNo, totalFee);
-        return respSuccess();
+        return WxUtils.respSuccess();
     }
 
     @Override
@@ -82,7 +84,8 @@ public class WebhookServiceImpl implements WebhookService {
         update.setStatus("SUCCESS");
         LambdaQueryWrapper<AdsOrderEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AdsOrderEntity::getOutTradeNo, outTradeNo);
-        adsOrderRepository.update(update, queryWrapper);
+        boolean flag = adsOrderRepository.update(update, queryWrapper);
+        log.info("{}", flag);
     }
 
     private void buildRefundOrder(JSONObject req, String openid, String outTradeNo, Integer totalFee) {
@@ -94,13 +97,5 @@ public class WebhookServiceImpl implements WebhookService {
         order.setBusinessType("ADS");
         order.setResp(req.toJSONString());
         adsOrderRepository.save(order);
-    }
-
-
-    private JSONObject respSuccess() {
-        JSONObject resp = new JSONObject();
-        resp.put("errcode", 0);
-        resp.put("errmsg", "OK");
-        return resp;
     }
 }

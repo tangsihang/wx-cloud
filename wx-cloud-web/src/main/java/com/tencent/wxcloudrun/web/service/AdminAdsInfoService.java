@@ -28,6 +28,10 @@ public interface AdminAdsInfoService {
 
     void off(BaseAdsParam param);
 
+    void batchOn(BatchAdsParam param);
+
+    void batchOff(BatchAdsParam param);
+
     JSONObject upload(UploadParam param);
 
     List<InviteUserDetailResult> payUserDetail(BaseAdsParam param);

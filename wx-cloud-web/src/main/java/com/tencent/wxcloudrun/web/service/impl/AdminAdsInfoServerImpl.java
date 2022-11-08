@@ -170,6 +170,38 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     }
 
     @Override
+    public void batchOn(BatchAdsParam param) {
+        List<Integer> idList = param.getIdList();
+        List<AdsInfoEntity> entityList = checkAdsExist(idList);
+        entityList.forEach(it -> {
+            if (AdsStatusEnum.ON.name().equals(it.getStatus())) {
+                throw new BizException(ErrorCode.BIZ_BREAK, it.getId() + " 已经是上架状态,无需再上架!");
+            }
+        });
+        AdsInfoEntity update = new AdsInfoEntity();
+        update.setStatus(AdsStatusEnum.ON.name());
+        LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(AdsInfoEntity::getId, idList);
+        adsInfoRepository.update(update, queryWrapper);
+    }
+
+    @Override
+    public void batchOff(BatchAdsParam param) {
+        List<Integer> idList = param.getIdList();
+        List<AdsInfoEntity> entityList = checkAdsExist(idList);
+        entityList.forEach(it -> {
+            if (AdsStatusEnum.OFF.name().equals(it.getStatus())) {
+                throw new BizException(ErrorCode.BIZ_BREAK, it.getId() + " 已经是下架状态,无需再下架!");
+            }
+        });
+        AdsInfoEntity update = new AdsInfoEntity();
+        update.setStatus(AdsStatusEnum.OFF.name());
+        LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(AdsInfoEntity::getId, idList);
+        adsInfoRepository.update(update, queryWrapper);
+    }
+
+    @Override
     public JSONObject upload(UploadParam param) {
         JSONObject reqJson = new JSONObject();
         reqJson.put("env", AppConstant.WX_ENV_ID);
@@ -207,5 +239,11 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
             throw new BizException(ErrorCode.BIZ_BREAK, "广告不存在!");
         }
         return entity;
+    }
+
+    private List<AdsInfoEntity> checkAdsExist(List<Integer> idList) {
+        LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(AdsInfoEntity::getId, idList);
+        return adsInfoRepository.list(queryWrapper);
     }
 }

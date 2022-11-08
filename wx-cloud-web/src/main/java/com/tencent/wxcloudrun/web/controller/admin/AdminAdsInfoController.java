@@ -83,8 +83,25 @@ public class AdminAdsInfoController {
     @ApiOperation("广告后台-下架")
     @PostMapping("/v1/ads/status-off")
     @ApiRequest
-    public Result<Void> statusOff(@RequestBody @Validated BaseAdsParam param) {
-        adsInfoService.off(param);
+    public Result<Void> statusOff(@RequestBody @Validated BatchAdsParam param) {
+        adsInfoService.batchOff(param);
+        return Result.Success();
+    }
+
+
+    @ApiOperation("广告后台-批量上架")
+    @PostMapping("/v1/ads/batch-status-on")
+    @ApiRequest
+    public Result<Void> batchStatusOn(@RequestBody @Validated BatchAdsParam param) {
+        adsInfoService.batchOn(param);
+        return Result.Success();
+    }
+
+    @ApiOperation("广告后台-批量下架")
+    @PostMapping("/v1/ads/batch-status-off")
+    @ApiRequest
+    public Result<Void> batchStatusOff(@RequestBody @Validated BatchAdsParam param) {
+        adsInfoService.batchOff(param);
         return Result.Success();
     }
 
