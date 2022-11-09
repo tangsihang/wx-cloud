@@ -23,13 +23,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (StringUtils.isEmpty(token)) {
             throw new BizException(ErrorCode.PARAM_ERROR, "access_token不能为空");
         }
-        boolean verify;
-        try {
-            verify = SignUtils.verify(token);
-            return verify;
-        } catch (Exception e) {
-            log.error("JWT加密失败:{}", token);
-            return false;
-        }
+        return SignUtils.verify(token);
     }
 }

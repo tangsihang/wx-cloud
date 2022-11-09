@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
@@ -52,12 +53,16 @@ public class AdminOrderInfoController {
     public void export(@RequestBody @Validated AdminOrderPageParam param, HttpServletResponse response) {
         HSSFWorkbook wb = orderInfoService.export(param);
         try {
-            response.setContentType("application/doc");
+            response.setContentType("application/octet-stream");
             response.addHeader("Content-Disposition", "attachment;filename=" + "order_file.xls");
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            wb.write(bos);
             OutputStream os = response.getOutputStream();
-            wb.write(os);
+            os.write(bos.toByteArray());
             os.flush();
             os.close();
+            bos.flush();
+            bos.close();
         } catch (Exception e) {
             log.error("导出异常!", e);
             throw new BizException(ErrorCode.BIZ_BREAK, "导出文件异常!");
