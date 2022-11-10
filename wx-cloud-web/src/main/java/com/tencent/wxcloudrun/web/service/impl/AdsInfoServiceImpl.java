@@ -42,11 +42,11 @@ import java.util.Date;
 @Slf4j
 public class AdsInfoServiceImpl implements AdsInfoService {
 
-    @Value("${wx.env.id:}")
+    @Value("${wx.env.id:prod-9ge6u8sn7684a421}")
     public String WX_ENV_ID;
-    @Value("${wx.app.server:}")
+    @Value("${wx.app.server:springboot-mvyj}")
     public String WX_APP_SERVER;
-    @Value("${wx.merchant.id:}")
+    @Value("${wx.merchant.id:1633796573}")
     public String WX_MERCHANT_ID;
 
     @Autowired

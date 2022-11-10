@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 public class AdminFileInfoServiceImpl implements AdminFileInfoService {
 
-    @Value("${wx.env.id:}")
+    @Value("${wx.env.id:prod-9ge6u8sn7684a421}")
     public String WX_ENV_ID;
 
     @Autowired

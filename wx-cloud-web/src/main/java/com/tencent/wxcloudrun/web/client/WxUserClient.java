@@ -19,9 +19,9 @@ public class WxUserClient {
     public String WX_APP_PHONE_NUM_URL;
     @Value("${wx.app.login.url:https://api.weixin.qq.com/sns/jscode2session}")
     public String WX_APP_LOGIN_URL;
-    @Value("${wx.app.id:}")
+    @Value("${wx.app.id:wx180962a99caf9ff5}")
     public String WX_APP_ID;
-    @Value("${wx.app.secret:}")
+    @Value("${wx.app.secret:44cf33babf1f631535c88a602be811a3}")
     public String WX_APP_SECRET;
 
 
