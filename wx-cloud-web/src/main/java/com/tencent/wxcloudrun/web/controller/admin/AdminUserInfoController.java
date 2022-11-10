@@ -3,8 +3,6 @@ package com.tencent.wxcloudrun.web.controller.admin;
 
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
-import com.tencent.wxcloudrun.common.expection.BizException;
-import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
 import com.tencent.wxcloudrun.common.request.AdminUserPageParam;
 import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
@@ -14,7 +12,6 @@ import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -56,19 +51,8 @@ public class AdminUserInfoController {
     @ApiOperation("用户后台-分页")
     @PostMapping("/v1/user/export")
     @ApiRequest
-    public void wxUserExport(@RequestBody @Validated AdminUserPageParam param, HttpServletResponse response) {
-        HSSFWorkbook wb = adminUserInfoService.export(param);
-        try {
-            response.setContentType("application/doc");
-            response.addHeader("Content-Disposition", "attachment;filename=" + "user_file.xls");
-            OutputStream os = response.getOutputStream();
-            wb.write(os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            log.error("导出异常!", e);
-            throw new BizException(ErrorCode.BIZ_BREAK, "导出文件异常!");
-        }
+    public Result<String> wxUserExport(@RequestBody @Validated AdminUserPageParam param) {
+        return Result.Success(adminUserInfoService.export(param));
     }
 
     @ApiOperation("用户后台-邀请客户详情")

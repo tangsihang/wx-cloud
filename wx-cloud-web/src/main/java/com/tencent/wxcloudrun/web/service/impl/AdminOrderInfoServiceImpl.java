@@ -11,6 +11,7 @@ import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import com.tencent.wxcloudrun.common.request.AdminOrderPageParam;
 import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
+import com.tencent.wxcloudrun.common.request.UploadParam;
 import com.tencent.wxcloudrun.common.response.AdminOrderResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.dao.entity.AdsInfoEntity;
@@ -19,6 +20,7 @@ import com.tencent.wxcloudrun.dao.entity.UserEntity;
 import com.tencent.wxcloudrun.dao.repository.AdsInfoRepository;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
 import com.tencent.wxcloudrun.dao.repository.UserRepository;
+import com.tencent.wxcloudrun.web.service.AdminFileInfoService;
 import com.tencent.wxcloudrun.web.service.AdminOrderInfoService;
 import com.tencent.wxcloudrun.web.utils.ExcelUtils;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
@@ -29,6 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +52,9 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
     private UserRepository userRepository;
     @Autowired
     private AdsInfoRepository adsInfoRepository;
+    @Autowired
+    private AdminFileInfoService adminFileInfoService;
+
 
     @Override
     public PageDTO<AdminOrderResult> page(AdminOrderPageParam param) {
@@ -85,10 +93,19 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
     }
 
     @Override
-    public HSSFWorkbook export(AdminOrderPageParam param) {
+    public String export(AdminOrderPageParam param) {
         PageDTO<AdminOrderResult> pageResult = page(param);
-        return parseExcel(pageResult.getRecords());
+        if (pageResult.getRecords().isEmpty()) {
+            throw new BizException(ErrorCode.BIZ_BREAK, "暂无数据,无需导出!");
+        }
+        HSSFWorkbook wb = parseExcel(pageResult.getRecords());
+        InputStream in = ExcelUtils.convertToStream(wb);
+        UploadParam uploadParam = new UploadParam();
+        String path = "excel/" + System.currentTimeMillis() + "_order_file.xls";
+        uploadParam.setPath(path);
+        return adminFileInfoService.upload(uploadParam, in);
     }
+
 
     private HSSFWorkbook parseExcel(List<AdminOrderResult> resultList) {
         String[][] content = new String[resultList.size()][];
@@ -106,6 +123,7 @@ public class AdminOrderInfoServiceImpl implements AdminOrderInfoService {
         }
         return ExcelUtils.getHSSFWorkbook(AppConstant.ADMIN_ORDER_EXPORT_TITLE, content);
     }
+
 
     private List<AdminOrderResult> transferRecordForPage(IPage<AdsOrderEntity> record) {
         return record.getRecords().stream().map(this::buildResult).collect(Collectors.toList());

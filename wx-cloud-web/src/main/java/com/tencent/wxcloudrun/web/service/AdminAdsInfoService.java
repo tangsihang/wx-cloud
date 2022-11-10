@@ -36,6 +36,6 @@ public interface AdminAdsInfoService {
 
     void updateVirtualNum(AdsVirtualNumEditParam param);
 
-    HSSFWorkbook export(AdsPageParam param);
+    String export(AdsPageParam param);
 
 }

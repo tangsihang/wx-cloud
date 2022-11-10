@@ -50,19 +50,8 @@ public class AdminOrderInfoController {
 
     @ApiOperation("订单查询-导出")
     @PostMapping("/v1/order/export")
-    public void export(@RequestBody @Validated AdminOrderPageParam param, HttpServletResponse response) {
-        HSSFWorkbook wb = orderInfoService.export(param);
-        try {
-            response.setContentType("application/doc");
-            response.addHeader("Content-Disposition", "attachment;filename=" + "order_file.xls");
-            OutputStream os = response.getOutputStream();
-            wb.write(os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            log.error("导出异常!", e);
-            throw new BizException(ErrorCode.BIZ_BREAK, "导出文件异常!");
-        }
+    public Result<String> export(@RequestBody @Validated AdminOrderPageParam param) {
+        return Result.Success(orderInfoService.export(param));
     }
 
     @ApiOperation("订单查询-详情")

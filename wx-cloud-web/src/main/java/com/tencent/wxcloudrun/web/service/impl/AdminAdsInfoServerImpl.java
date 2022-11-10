@@ -1,6 +1,5 @@
 package com.tencent.wxcloudrun.web.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,8 +20,8 @@ import com.tencent.wxcloudrun.dao.entity.UserEntity;
 import com.tencent.wxcloudrun.dao.repository.AdsInfoRepository;
 import com.tencent.wxcloudrun.dao.repository.AdsOrderRepository;
 import com.tencent.wxcloudrun.dao.repository.UserRepository;
-import com.tencent.wxcloudrun.web.client.WxFileClient;
 import com.tencent.wxcloudrun.web.service.AdminAdsInfoService;
+import com.tencent.wxcloudrun.web.service.AdminFileInfoService;
 import com.tencent.wxcloudrun.web.utils.ExcelUtils;
 import com.tencent.wxcloudrun.web.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +50,8 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     private AdsOrderRepository adsOrderRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AdminFileInfoService adminFileInfoService;
 
     @Override
     public PageDTO<AdsPageInfoResult> page(AdsPageParam param) {
@@ -120,9 +122,17 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     }
 
     @Override
-    public HSSFWorkbook export(AdsPageParam param) {
+    public String export(AdsPageParam param) {
         PageDTO<AdsPageInfoResult> pageResult = page(param);
-        return parseExcel(pageResult.getRecords());
+        if (pageResult.getRecords().isEmpty()) {
+            throw new BizException(ErrorCode.BIZ_BREAK, "暂无数据,无需导出!");
+        }
+        HSSFWorkbook wb = parseExcel(pageResult.getRecords());
+        InputStream in = ExcelUtils.convertToStream(wb);
+        UploadParam uploadParam = new UploadParam();
+        String path = "excel/" + System.currentTimeMillis() + "_user_file.xls";
+        uploadParam.setPath(path);
+        return adminFileInfoService.upload(uploadParam, in);
     }
 
     private HSSFWorkbook parseExcel(List<AdsPageInfoResult> resultList) {
@@ -141,6 +151,7 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         }
         return ExcelUtils.getHSSFWorkbook(AppConstant.ADMIN_ADS_EXPORT_TITLE, content);
     }
+
 
     @Override
     public void on(BaseAdsParam param) {

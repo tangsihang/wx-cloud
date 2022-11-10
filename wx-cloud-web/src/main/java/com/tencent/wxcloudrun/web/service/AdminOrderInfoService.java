@@ -23,7 +23,7 @@ public interface AdminOrderInfoService {
 
     UserInfoResult linkUserInfo(BaseWxUserParam param);
 
-    HSSFWorkbook export(AdminOrderPageParam param);
+    String export(AdminOrderPageParam param);
 
 
 }

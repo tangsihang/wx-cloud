@@ -37,8 +37,6 @@ public class AdminTest {
     private AdminOrderInfoService adminOrderInfoService;
     @Autowired
     private AdminAdsInfoService adminAdsInfoService;
-    @Autowired
-    private AdminFileInfoService adminFileInfoService;
 
 
     @Test
@@ -95,12 +93,12 @@ public class AdminTest {
     }
 
 
-    @Test
-    public void test_upload() {
-        String msg = "{\"errcode\":0,\"authorization\":\"q-sign-algorithm=sha1&q-ak=AKIDOUPloTlI4ESskPbVGX6D3nSQGvIKfK8aoA4y_f2xHfUf6S7HnNhKnm1MqyJ8PNKb&q-sign-time=1668006722;1668007622&q-key-time=1668006722;1668007622&q-header-list=&q-url-param-list=&q-signature=84c030c32f8e57cf1aa71cc0ef2dd8dfa0de2214\",\"cos_file_id\":\"HIGP8SNqpwtRc59lFJpR4kIbbbDvq0cRh59fSbwzHZ1ahKX7jpo0iDoqLawTP/LVlCazlzvjhkw6d7UyBgJjkzN3MqtI0xf3Xqq/6YGHfL/wldQ1bL64FWhNP4anWCvcnGK5mSLDV4yJEHweoO6AyW6DNRlJBKqiuMrQlurT0UnOhQQ2FaYmkA==\",\"file_id\":\"cloud://prod-9ge6u8sn7684a421.7072-prod-9ge6u8sn7684a421-1314693576/web/smb-data.pdf\",\"errmsg\":\"ok\",\"url\":\"https://cos.ap-shanghai.myqcloud.com/7072-prod-9ge6u8sn7684a421-1314693576/web/smb-data.pdf\",\"token\":\"h5kidHboTJc6Ylxx0QQgAi5JVZyOEsXa8ac1fff2902d4c5e04f803efb49cbc6dQcvvd9DvAavx7nzhcvRr7XvGEG_eH1FwYW_4DxlHOeA_L6YYgCFX6uZnkqPvnvUnTx_IMrzQg6Gt3GXNyixN-V1sTrnjX9UJCV7QANH7Pj8WTqHXmEXAx6ldmaFLGkjoBuf7skiJZy6VbUvL9a6FXmsnLxtUreq4xSlYhOxi2KQ7GRhVgxNSC2KzrhcCoURiSwmhrWAAL5hmtdVOVKnvItvvM3tJ62vQzA5VvEafSqoJzZoyRK8upSo8uoiI___-FupBqyK9Tc-LJxOIpNnnYgkiKTyQPMTDysykk7nrBnDYNlhHa6viPEwPuV9MLRBlgZXlKhdCr126lNKPWYVv5_pVFGa9lU9iRDagaA2pYPVscc_qvsBcHUkbNXdQf76O\"}";
-        JSONObject respJson = JSON.parseObject(msg);
-        respJson.put("key", "/web/smb-data.pdf");
-        adminFileInfoService.upload(respJson);
-    }
+//    @Test
+//    public void test_upload() {
+//        String msg = "{\"errcode\":0,\"authorization\":\"q-sign-algorithm=sha1&q-ak=AKIDOUPloTlI4ESskPbVGX6D3nSQGvIKfK8aoA4y_f2xHfUf6S7HnNhKnm1MqyJ8PNKb&q-sign-time=1668006722;1668007622&q-key-time=1668006722;1668007622&q-header-list=&q-url-param-list=&q-signature=84c030c32f8e57cf1aa71cc0ef2dd8dfa0de2214\",\"cos_file_id\":\"HIGP8SNqpwtRc59lFJpR4kIbbbDvq0cRh59fSbwzHZ1ahKX7jpo0iDoqLawTP/LVlCazlzvjhkw6d7UyBgJjkzN3MqtI0xf3Xqq/6YGHfL/wldQ1bL64FWhNP4anWCvcnGK5mSLDV4yJEHweoO6AyW6DNRlJBKqiuMrQlurT0UnOhQQ2FaYmkA==\",\"file_id\":\"cloud://prod-9ge6u8sn7684a421.7072-prod-9ge6u8sn7684a421-1314693576/web/smb-data.pdf\",\"errmsg\":\"ok\",\"url\":\"https://cos.ap-shanghai.myqcloud.com/7072-prod-9ge6u8sn7684a421-1314693576/web/smb-data.pdf\",\"token\":\"h5kidHboTJc6Ylxx0QQgAi5JVZyOEsXa8ac1fff2902d4c5e04f803efb49cbc6dQcvvd9DvAavx7nzhcvRr7XvGEG_eH1FwYW_4DxlHOeA_L6YYgCFX6uZnkqPvnvUnTx_IMrzQg6Gt3GXNyixN-V1sTrnjX9UJCV7QANH7Pj8WTqHXmEXAx6ldmaFLGkjoBuf7skiJZy6VbUvL9a6FXmsnLxtUreq4xSlYhOxi2KQ7GRhVgxNSC2KzrhcCoURiSwmhrWAAL5hmtdVOVKnvItvvM3tJ62vQzA5VvEafSqoJzZoyRK8upSo8uoiI___-FupBqyK9Tc-LJxOIpNnnYgkiKTyQPMTDysykk7nrBnDYNlhHa6viPEwPuV9MLRBlgZXlKhdCr126lNKPWYVv5_pVFGa9lU9iRDagaA2pYPVscc_qvsBcHUkbNXdQf76O\"}";
+//        JSONObject respJson = JSON.parseObject(msg);
+//        respJson.put("key", "/web/smb-data.pdf");
+//        adminFileInfoService.upload(respJson);
+//    }
 
 }

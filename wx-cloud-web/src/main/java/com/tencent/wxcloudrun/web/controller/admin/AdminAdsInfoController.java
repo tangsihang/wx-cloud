@@ -49,19 +49,8 @@ public class AdminAdsInfoController {
     @ApiOperation("广告后台-导出")
     @PostMapping("/v1/ads/export")
     @ApiRequest
-    public void export(@RequestBody @Validated AdsPageParam param, HttpServletResponse response) {
-        HSSFWorkbook wb = adsInfoService.export(param);
-        try {
-            response.setContentType("application/doc");
-            response.addHeader("Content-Disposition", "attachment;filename=" + "ads_file.xls");
-            OutputStream os = response.getOutputStream();
-            wb.write(os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            log.error("导出异常!", e);
-            throw new BizException(ErrorCode.BIZ_BREAK, "导出文件异常!");
-        }
+    public Result<String> export(@RequestBody @Validated AdsPageParam param) {
+        return Result.Success(adsInfoService.export(param));
     }
 
     @ApiOperation("广告后台-详情")

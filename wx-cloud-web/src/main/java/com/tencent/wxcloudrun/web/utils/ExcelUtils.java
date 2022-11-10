@@ -1,8 +1,14 @@
 package com.tencent.wxcloudrun.web.utils;
 
 import com.tencent.wxcloudrun.common.constants.AppConstant;
+import com.tencent.wxcloudrun.common.expection.BizException;
+import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 /**
  * @author tangsh
@@ -37,4 +43,17 @@ public class ExcelUtils {
         }
         return wb;
     }
+
+    public static InputStream convertToStream(HSSFWorkbook wb) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            wb.write(bos);
+            byte[] byteArray = bos.toByteArray();
+            return new ByteArrayInputStream(byteArray);
+        } catch (Exception e) {
+            throw new BizException(ErrorCode.BIZ_BREAK, "文件流处理异常!");
+        }
+    }
+
+
 }

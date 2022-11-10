@@ -7,6 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Map;
+
 /**
  * @author tangsh
  * @date 2022/11/03
@@ -28,12 +32,11 @@ public class WxFileClient {
         return WxUtils.getFileInfo(response);
     }
 
-    public void uploadFile(String url, JSONObject reqJson) {
-        String response = HttpRequest.post(url)
-                .header("Content-Type", "multipart/form-data")
-                .form(reqJson)
-                .body();
-        log.info("请求:{},响应:{}", reqJson, response);
+    public void uploadFile(String url, Map<String, String> params, InputStream in) {
+        HttpRequest request = HttpRequest.post(url);
+        params.forEach(request::part);
+        request.part("file", in);
+        request.body();
     }
 
 

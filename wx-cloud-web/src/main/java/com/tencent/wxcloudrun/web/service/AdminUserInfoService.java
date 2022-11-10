@@ -26,5 +26,5 @@ public interface AdminUserInfoService {
 
     List<UserPayDetailResult> userPayDetail(BaseWxUserParam param);
 
-    HSSFWorkbook export(AdminUserPageParam param);
+    String export(AdminUserPageParam param);
 }

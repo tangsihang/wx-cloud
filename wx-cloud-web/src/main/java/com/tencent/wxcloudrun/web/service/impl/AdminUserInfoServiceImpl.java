@@ -9,16 +9,14 @@ import com.tencent.wxcloudrun.common.constants.AppConstant;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;
-import com.tencent.wxcloudrun.common.request.AdminUserLoginParam;
-import com.tencent.wxcloudrun.common.request.AdminUserPageParam;
-import com.tencent.wxcloudrun.common.request.BaseInviteCodeParam;
-import com.tencent.wxcloudrun.common.request.BaseWxUserParam;
+import com.tencent.wxcloudrun.common.request.*;
 import com.tencent.wxcloudrun.common.response.InvitePayDetailResult;
 import com.tencent.wxcloudrun.common.response.InviteUserDetailResult;
 import com.tencent.wxcloudrun.common.response.UserInfoResult;
 import com.tencent.wxcloudrun.common.response.UserPayDetailResult;
 import com.tencent.wxcloudrun.dao.entity.*;
 import com.tencent.wxcloudrun.dao.repository.*;
+import com.tencent.wxcloudrun.web.service.AdminFileInfoService;
 import com.tencent.wxcloudrun.web.service.AdminUserInfoService;
 import com.tencent.wxcloudrun.web.utils.ExcelUtils;
 import com.tencent.wxcloudrun.web.utils.NonceUtil;
@@ -31,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +57,8 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     private UserInviteCodeRepository codeRepository;
     @Autowired
     private UserInviteRelateRepository relateRepository;
+    @Autowired
+    private AdminFileInfoService adminFileInfoService;
 
 
     private static final Map<String, String> admin_user_map = Maps.newHashMap();
@@ -190,9 +191,17 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     }
 
     @Override
-    public HSSFWorkbook export(AdminUserPageParam param) {
+    public String export(AdminUserPageParam param) {
         PageDTO<UserInfoResult> pageResult = page(param);
-        return parseExcel(pageResult.getRecords());
+        if (pageResult.getRecords().isEmpty()) {
+            throw new BizException(ErrorCode.BIZ_BREAK, "暂无数据,无需导出!");
+        }
+        HSSFWorkbook wb = parseExcel(pageResult.getRecords());
+        InputStream in = ExcelUtils.convertToStream(wb);
+        UploadParam uploadParam = new UploadParam();
+        String path = "excel/" + System.currentTimeMillis() + "_user_file.xls";
+        uploadParam.setPath(path);
+        return adminFileInfoService.upload(uploadParam, in);
     }
 
     private HSSFWorkbook parseExcel(List<UserInfoResult> resultList) {
