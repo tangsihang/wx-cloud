@@ -1,7 +1,6 @@
 
 package com.tencent.wxcloudrun.web.controller.admin;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tencent.wxcloudrun.common.annotation.ApiRequest;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.expection.BizException;
@@ -54,7 +53,7 @@ public class AdminAdsInfoController {
         HSSFWorkbook wb = adsInfoService.export(param);
         try {
             response.setContentType("application/doc");
-            response.addHeader("Content-Disposition", "attachment;filename=" + "order_file.xls");
+            response.addHeader("Content-Disposition", "attachment;filename=" + "ads_file.xls");
             OutputStream os = response.getOutputStream();
             wb.write(os);
             os.flush();
@@ -127,15 +126,6 @@ public class AdminAdsInfoController {
     public Result<Void> updateVirtualNum(@RequestBody @Validated AdsVirtualNumEditParam param) {
         adsInfoService.updateVirtualNum(param);
         return Result.Success();
-    }
-
-
-    @ApiOperation("广告后台-文件路径获取")
-    @PostMapping("/v1/ads/pre-upload")
-    @ApiRequest
-    public Result<JSONObject> getUploadUrl(@RequestBody @Validated UploadParam param) {
-        JSONObject reqJson = adsInfoService.upload(param);
-        return Result.Success(reqJson);
     }
 
     @ApiOperation("用户后台-邀请客户详情")

@@ -60,7 +60,7 @@ public class AdminUserInfoController {
         HSSFWorkbook wb = adminUserInfoService.export(param);
         try {
             response.setContentType("application/doc");
-            response.addHeader("Content-Disposition", "attachment;filename=" + "order_file.xls");
+            response.addHeader("Content-Disposition", "attachment;filename=" + "user_file.xls");
             OutputStream os = response.getOutputStream();
             wb.write(os);
             os.flush();

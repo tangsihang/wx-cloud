@@ -27,4 +27,14 @@ public class WxFileClient {
         log.info("请求:{},响应:{}", reqJson.toJSONString(), response);
         return WxUtils.getFileInfo(response);
     }
+
+    public void uploadFile(String url, JSONObject reqJson) {
+        String response = HttpRequest.post(url)
+                .header("Content-Type", "multipart/form-data")
+                .form(reqJson)
+                .body();
+        log.info("请求:{},响应:{}", reqJson, response);
+    }
+
+
 }

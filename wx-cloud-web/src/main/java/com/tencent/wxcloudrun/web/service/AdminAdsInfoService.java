@@ -32,8 +32,6 @@ public interface AdminAdsInfoService {
 
     void batchOff(BatchAdsParam param);
 
-    JSONObject upload(UploadParam param);
-
     List<InviteUserDetailResult> payUserDetail(BaseAdsParam param);
 
     void updateVirtualNum(AdsVirtualNumEditParam param);

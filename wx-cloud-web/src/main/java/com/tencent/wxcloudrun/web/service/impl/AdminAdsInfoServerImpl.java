@@ -50,8 +50,6 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
     private AdsOrderRepository adsOrderRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private WxFileClient wxFileClient;
 
     @Override
     public PageDTO<AdsPageInfoResult> page(AdsPageParam param) {
@@ -199,14 +197,6 @@ public class AdminAdsInfoServerImpl implements AdminAdsInfoService {
         LambdaQueryWrapper<AdsInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(AdsInfoEntity::getId, idList);
         adsInfoRepository.update(update, queryWrapper);
-    }
-
-    @Override
-    public JSONObject upload(UploadParam param) {
-        JSONObject reqJson = new JSONObject();
-        reqJson.put("env", AppConstant.WX_ENV_ID);
-        reqJson.put("path", param.getPath());
-        return wxFileClient.upload(reqJson);
     }
 
     @Override
