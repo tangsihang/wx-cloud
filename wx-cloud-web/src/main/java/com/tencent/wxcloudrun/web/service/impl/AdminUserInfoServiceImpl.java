@@ -61,21 +61,19 @@ public class AdminUserInfoServiceImpl implements AdminUserInfoService {
     private AdminFileInfoService adminFileInfoService;
 
 
-    private static final Map<String, String> admin_user_map = Maps.newHashMap();
+    private static final Map<String, String> ADMIN_USER_MAP = Maps.newHashMap();
 
     static {
-        admin_user_map.put("username", "admin");
-        admin_user_map.put("password", "a9527");
+        ADMIN_USER_MAP.put("username", "admin");
+        ADMIN_USER_MAP.put("password", "a9527");
     }
 
     @Override
     public String login(AdminUserLoginParam param) {
         String username = param.getUsername();
         String password = param.getPassword();
-        if (username.equals(admin_user_map.get("username")) && password.equals(admin_user_map.get("password"))) {
-            String token = SignUtils.sign(username, password);
-            log.info("登录成功~");
-            return token;
+        if (username.equals(ADMIN_USER_MAP.get("username")) && password.equals(ADMIN_USER_MAP.get("password"))) {
+            return SignUtils.sign(username, password);
         } else {
             log.error("登录失败~,账户密码不正确~ {},{}", username, password);
             throw new BizException(ErrorCode.BIZ_BREAK, "登录失败~,账户密码不正确!");

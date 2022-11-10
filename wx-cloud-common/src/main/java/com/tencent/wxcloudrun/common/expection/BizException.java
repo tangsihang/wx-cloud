@@ -2,6 +2,11 @@ package com.tencent.wxcloudrun.common.expection;
 
 import lombok.Data;
 
+/**
+ * @author tangsh
+ * @date 2022/10/31
+ */
+
 @Data
 public class BizException extends RuntimeException {
 

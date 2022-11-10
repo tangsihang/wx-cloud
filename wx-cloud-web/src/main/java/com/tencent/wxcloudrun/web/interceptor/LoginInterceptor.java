@@ -1,4 +1,4 @@
-package com.tencent.wxcloudrun.web.Interceptor;
+package com.tencent.wxcloudrun.web.interceptor;
 
 import com.tencent.wxcloudrun.common.expection.BizException;
 import com.tencent.wxcloudrun.common.expection.ErrorCode;

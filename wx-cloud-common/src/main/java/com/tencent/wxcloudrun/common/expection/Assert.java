@@ -36,11 +36,11 @@ public class Assert {
             throw new BizException(code,error);
         }
         if(obj instanceof Collection){
-            if(((Collection) obj).size()==0){
+            if(((Collection<?>) obj).size()==0){
                 throw new BizException(code,error);
             }
         }
-        if(obj.equals("") || obj.toString().trim().equals("")) {
+        if("".equals(obj) || "".equals(obj.toString().trim())) {
             throw new BizException(code,error);
         }
     }

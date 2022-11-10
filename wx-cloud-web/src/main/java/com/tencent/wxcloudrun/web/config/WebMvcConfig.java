@@ -1,6 +1,6 @@
 package com.tencent.wxcloudrun.web.config;
 
-import com.tencent.wxcloudrun.web.Interceptor.LoginInterceptor;
+import com.tencent.wxcloudrun.web.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

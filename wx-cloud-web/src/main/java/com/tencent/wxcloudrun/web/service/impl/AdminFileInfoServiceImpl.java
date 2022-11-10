@@ -1,19 +1,16 @@
 package com.tencent.wxcloudrun.web.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.tencent.wxcloudrun.common.constants.AppConstant;
-import com.tencent.wxcloudrun.common.expection.BizException;
-import com.tencent.wxcloudrun.common.expection.ErrorCode;
 import com.tencent.wxcloudrun.common.request.UploadParam;
 import com.tencent.wxcloudrun.web.client.WxFileClient;
 import com.tencent.wxcloudrun.web.service.AdminFileInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -24,13 +21,16 @@ import java.util.Map;
 @Slf4j
 public class AdminFileInfoServiceImpl implements AdminFileInfoService {
 
+    @Value("${wx.env.id:}")
+    public String WX_ENV_ID;
+
     @Autowired
     private WxFileClient wxFileClient;
 
     @Override
     public JSONObject uploadFile(UploadParam param) {
         JSONObject reqJson = new JSONObject();
-        reqJson.put("env", AppConstant.WX_ENV_ID);
+        reqJson.put("env", WX_ENV_ID);
         reqJson.put("path", param.getPath());
         return wxFileClient.upload(reqJson);
     }
