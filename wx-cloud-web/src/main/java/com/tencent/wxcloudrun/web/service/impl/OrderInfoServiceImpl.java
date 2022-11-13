@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tencent.wxcloudrun.common.constants.OrderStatusEnum;
 import com.tencent.wxcloudrun.common.dto.PageDTO;
 import com.tencent.wxcloudrun.common.request.BaseOrderNoParam;
 import com.tencent.wxcloudrun.common.request.BasePageParam;
@@ -41,6 +42,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         IPage<AdsOrderEntity> page = new Page<>(param.getPageNo(), param.getPageSize());
         LambdaQueryWrapper<AdsOrderEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AdsOrderEntity::getOpenid, openid);
+        queryWrapper.eq(AdsOrderEntity::getStatus, OrderStatusEnum.SUCCESS.name());
         IPage<AdsOrderEntity> record = orderRepository.page(page, queryWrapper);
         List<AdminOrderResult> resultList = transferRecordForPage(record);
         return PageUtils.copyWithRecords(record, resultList);
